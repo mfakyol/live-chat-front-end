@@ -1,0 +1,147 @@
+.main {
+  display: inline-block;
+  width: calc(100% - 260px);
+  height: calc(100vh - 60px);
+  background-color: #fff;
+}
+
+.message-board {
+  background-color: #34495e;
+  width: 100%;
+  height: calc(100% - 50px);
+  overflow: auto;
+}
+
+.message-board-header {
+  position: relative;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 60px;
+  background-color: #fff;
+  text-align: center;
+}
+
+.message-board-header > img {
+  float: left;
+  margin-top: 5px;
+  margin-left: 15px;
+  width: 50px;
+  border-radius: 50%;
+  border: 3px solid #9b59b6;
+}
+
+.message-board-header > .username {
+  float: left;
+  font-size: 20px;
+  font-weight: 600;
+  margin-top: 12px;
+  margin-left: 20px;
+  cursor: pointer;
+}
+.message-board-header > .status {
+  position: absolute;
+  top: 38px;
+  left: 85px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.message-board-header > i {
+  position: absolute;
+  top: 14px;
+  right: 10px;
+  font-size: 30px;
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.message-board-header > i:hover {
+  color: #9b59b6;
+}
+
+.messages {
+  display: block;
+  flex-wrap: wrap-reverse;
+  width: 100%;
+  height: calc(100% - 60px);
+  padding: 10px;
+}
+
+.message {
+  display: block;
+  margin: 10px 0;
+  min-width: 250px;
+  width: 100%;
+  overflow: auto;
+}
+
+.message > span {
+  display: inline-block;
+  max-width: 51%;
+  padding: 10px;
+  border-radius: 10px;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+}
+
+.message-left > span {
+  float: left;
+  background-color: #4acef7;
+}
+.message-right {
+  direction: rtl;
+}
+
+.message-right > span {
+  direction: ltr;
+  float: right;
+  background-color: #fff;
+}
+
+
+.message > span > .time {
+    float: right;
+    margin-right: 5px;
+    font-weight: 600;
+    color: #343b3b;
+}
+
+@media (max-width: 600px) {
+  .main {
+    width: 100%;
+  }
+
+  .message > span {
+    display: inline-block;
+    max-width: 70%;
+    padding: 10px;
+    border-radius: 10px;
+    font-family: "Open Sans", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+  }
+}
+
+
+/* width */
+.message-board::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* Track */
+.message-board::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+.message-board::-webkit-scrollbar-thumb {
+  background: #9b59b6;
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+.message-board::-webkit-scrollbar-thumb:hover {
+  background:  #d881fa;
+}

@@ -1,0 +1,197 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 60px;
+  background-color: #ecf0f1;
+  z-index: 10;
+}
+
+.brand {
+  height: 100%;
+}
+
+.brand h1 {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 10px;
+  font-size: 30px;
+  font-weight: 900;
+  color: #8e44ad;
+  transform: rotate(-5deg);
+  transition: 1s cubic-bezier(0.900, -0.600, 0.210, 1.650);
+}
+
+.brand:hover h1 {
+  transform: rotate(360deg);
+}
+
+.brand > h1 > span {
+  display: inline-block;
+  font-size: 25px;
+  transition: 1.5s cubic-bezier(0.745, -0.435, 0.270, 1.420);
+}
+
+.brand > h1 > span::after {
+  display: inline-block;
+  content: "🙃";
+}
+
+.brand:hover > h1 > span {
+  transform: rotate(360deg);
+}
+
+.brand:hover > h1 > span::after {
+  content: "😃";
+}
+
+.account {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  margin-right: 5px;
+  padding: 5px;
+}
+
+.user-image {
+  width: 50px;
+  background-color: grey;
+  border-radius: 50%;
+  border: 2px solid  #8e44ad;
+  cursor: pointer;
+}
+
+.online {
+  position: absolute;
+  top: 40px;
+  right: 5px;
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  background-color: #20cf86;
+  border-radius: 50%;
+}
+
+.online:hover::after {
+  content: "online";
+  position: absolute;
+  top: 10px;
+  right: 5px;
+  background-color: #fff;
+  padding: 2px 5px;
+  color: rgba(50, 50, 50, 0.9);
+  border-radius: 2px;
+  font-size: 10px;
+  font-weight: 400;
+  font-family: "Lato";
+}
+
+.offline {
+  position: absolute;
+  top: 40px;
+  right: 5px;
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  background-color: #808080;
+  border-radius: 50%;
+}
+
+.offline:hover::after {
+  content: "offline";
+  position: absolute;
+  top: 10px;
+  right: 5px;
+  background-color: #fff;
+  padding: 2px 5px;
+  color: rgba(50, 50, 50, 0.9);
+  border-radius: 2px;
+  font-size: 10px;
+  font-weight: 400;
+  font-family: "Lato";
+}
+
+.account-menu {
+  display: none;
+  position: absolute;
+  top: 58px;
+  right: -3px;
+  width: 300px;
+  background-color: #fff;
+  border-radius: 3px;
+  border: 1px solid rgba(50, 50, 50, 0.5);
+  z-index: 10;
+}
+
+.account-info {
+    display: inline-block;
+    width: 100%;
+}
+
+.account-info > .user-image {
+    margin: 5px;
+    cursor: default !important;
+}
+
+.account-info > .username {
+    display: inline-block;
+    position: absolute;
+    top: 10px;
+    left: 65px;
+    width: 230px;
+    height: 20px;
+    font-size: 16px;
+    font-weight: 900;
+    font-family: 'Lato';
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.account-info > .email {
+    display: inline-block;
+    position: absolute;
+    top: 33px;
+    left: 65px;
+    width: 230px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 600;
+    color:#525757;
+}
+
+.account-info > .phone {
+    display: inline-block;
+    position: absolute;
+    top: 25px;
+    left: 45px;
+    width: 230px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 600;
+    color:#525757;
+    display: none;
+}
+
+.account-info > hr {
+    margin: 1px;
+    border-color: #525757;
+    background-color: #525757;
+}
+
+.menu-items {
+    display: block;
+}
+
+.menu-item {
+    display: block;
+    font-size: 18px;
+    padding: 8px 20px;
+    cursor: pointer;
+    transition: .3s;
+    color: black;
+    font-weight: 600;
+}
+
+.menu-item:hover {
+    background-color: rgba(200, 200, 200, 0.6);
+}

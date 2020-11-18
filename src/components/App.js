@@ -1,5 +1,5 @@
 import React from "react";
-import "../helpers/App.css";
+import "../helpers/styles/App.css";
 import Routers from "../router/index";
 
 function App(props) {

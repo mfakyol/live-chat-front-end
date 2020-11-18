@@ -1,0 +1,149 @@
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, .3);
+  z-index: 20;
+  display: none;
+}
+
+.profile-container {
+  position: absolute;
+  width: 500px;
+  min-height: 450px;
+  background-color:rgba(44, 62, 80, 1);
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  text-align: center;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, .5);
+}
+
+.close-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 25px;
+    color: #8e44ad;
+    transition: .3s;
+    cursor: pointer;
+}
+.close-icon:hover {
+    color: #fff;
+}
+
+.user-image-container {
+    position: relative;
+    display: inline-block;
+}
+
+.user-image {
+    margin-top: 30px;
+    width: 140px;
+    height: 140px;
+    background-color: #fff;
+    border: 5px solid #8e44ad;
+    border-radius: 50%;
+    margin-bottom: 30px;
+}
+
+
+.user-image-container:before {
+    position: absolute;
+    font-family: "Font Awesome 5 Free";
+    content: "\f067";
+    display: block;
+    padding-right: 3px;
+    font-weight: 900;
+    color: #8e44ad;
+    top: 30px;
+    left: 0;
+    padding: 48px 52px;
+    font-size: 40px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, .3);
+    transition: .3s;
+    opacity: 0;
+    cursor: pointer;
+ }
+
+ .user-image-container:hover:before {
+    opacity: 1;
+ }
+
+
+.hr {
+    margin: 0 10px;
+}
+
+.info-container {
+    position: relative;
+    width: 100%;
+    text-align: start;
+    color: #fff;
+}
+
+
+.info {
+    display: inline-block;
+    width: 10%;
+    text-align: center;
+    font-size: 25px;
+}
+
+.info > i {
+    position: absolute;
+    top: 50%;
+    transform: translate(0,-50%);
+}
+
+.fullname {
+    display: inline-block;
+    width: 80%;
+    padding: 20px;
+    text-align: center;
+    font-size: 25px;
+    font-family: 'Lato';
+}
+
+.edit {
+    display: inline-block;
+    width: 10%;
+    text-align: center;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.edit > i {
+    position: absolute;
+    top: 50%;
+    transform: translate(-100%,-50%);
+    color: #8e44ad;
+    transition: .3s;
+}
+
+.edit > i:hover {
+    color: #fff;
+}
+
+
+.description {
+    display: inline-block;
+    width: 80%;
+    padding: 5px 20px;
+    text-align: justify;
+    font-size:14px;
+    font-family: 'Lato';
+}
+
+
+@media (max-width: 600px) {
+  .profile-container {
+    width: 90%;
+
+  }
+}
