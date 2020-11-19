@@ -1,20 +1,35 @@
+import Axios from "axios";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import classes from "../../../helpers/styles/home.module.css";
+import config from "../../../config";
 
 export default class Home extends Component {
   state = {
     email: "",
     password: "",
+    err: "",
   };
   signin = (e) => {
+    this.setState({ err: "" });
     e.preventDefault();
     const { email, password } = this.state;
     let user = {
       email,
       password,
     };
-    console.log(user);
+    Axios.get(`${config.apiDomain}/auth`, { params: user })
+      .then((res) => res.data)
+      .then(({ status, message, token }) => {
+        if (status) {
+          localStorage.setItem("token", JSON.stringify(token));
+        } else {
+          this.setState({
+            err: message,
+            password: "",
+          });
+        }
+      });
     //fetch
   };
 
@@ -25,7 +40,7 @@ export default class Home extends Component {
   };
 
   render() {
-    const { email, password } = this.state;
+    const { email, password, err } = this.state;
 
     return (
       <>
@@ -48,7 +63,10 @@ export default class Home extends Component {
             <Link className={classes["nav-item"]} to="/contactus">
               Contact Us
             </Link>
-            <a className={classes["nav-item"]} href="https://github.com/mfakyol/live-chat-front-end">
+            <a
+              className={classes["nav-item"]}
+              href="https://github.com/mfakyol/live-chat-front-end"
+            >
               Github
             </a>
           </div>
@@ -88,6 +106,15 @@ export default class Home extends Component {
             >
               <h3>Sign In</h3>
               <hr />
+
+              <span
+                style={{ opacity: err ? "1" : "0" }}
+                className={classes.err}
+              >
+                <p>
+                  {err} <i onClick={(e) => this.setState({ err: "" })} className="fas fa-times"></i>
+                </p>
+              </span>
 
               <div className={classes["form-group"]}>
                 <span>E-mail</span>

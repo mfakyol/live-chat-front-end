@@ -11,10 +11,11 @@ export default class Signup extends Component {
     fullName: "",
     password: "",
     activationCode: "",
+    err: "",
   };
 
   signupPage = () => {
-    const { email, fullName, password } = this.state;
+    const { email, fullName, password, err } = this.state;
     return (
       <form
         id="form"
@@ -23,6 +24,15 @@ export default class Signup extends Component {
       >
         <h3>Sign Up</h3>
         <hr />
+
+        <span
+          style={{ display: err ? "block" : "none" }}
+          className={classes.err}
+        >
+          <p>
+            {err} <i onClick={(e) => this.setState({ err: "" })} className="fas fa-times"></i>
+          </p>
+        </span>
 
         <div className={classes["form-group"]}>
           <span>E-mail</span>
@@ -64,7 +74,7 @@ export default class Signup extends Component {
   };
 
   activationPage = () => {
-    const { email, activationCode } = this.state;
+    const { activationCode, err, info } = this.state;
     return (
       <form
         id="form"
@@ -74,11 +84,24 @@ export default class Signup extends Component {
         <h3>Activate Account</h3>
         <hr />
 
-        <div className={classes["form-group"]}>
+        <span
+          style={{ display: info ? "block" : "none" }}
+          className={classes.info}
+        >
           <p>
-            {`We sent an email to ${email} address to activate your acount.`}
+            {info} <i  onClick={(e) => this.setState({ info: "" })} className="fas fa-times"></i>
           </p>
-        </div>
+
+        </span>
+        <span
+          style={{ display: err ? "block" : "none" }}
+          className={classes.err}
+        >
+          <p>
+            {err} <i onClick={(e) => this.setState({ err: "" })} className="fas fa-times"></i>
+          </p>
+        </span>
+
         <div className={classes["form-group"]}>
           <span>Activation Code</span>
           <input
@@ -110,18 +133,27 @@ export default class Signup extends Component {
       fullName,
       password,
     };
-    console.log(user);
-    //fecth
-    Axios.post(`${config.apiDomain}/auth/signup`, {
-      email,
-      fullName,
-      password,
-    });
 
-    //if successfull
-    /*this.setState({
-      page: 1,
-    }); */
+    Axios.post(`${config.apiDomain}/auth`, user)
+      .then((res) => res.data)
+      .then(({ status, message }) => {
+        if (status) {
+          this.setState({
+            info: message,
+            page: 1,
+            err: ''
+          });
+        } else {
+          this.setState({
+            err: message,
+          });
+        }
+      })
+      .catch((err) => {
+        this.setState({
+          err: "Server error.",
+        });
+      });
   };
 
   activateAccount = (e) => {
@@ -131,7 +163,20 @@ export default class Signup extends Component {
       email,
       activationCode,
     };
-    console.log(activation);
+    Axios.put(`${config.apiDomain}/auth`, activation)
+    .then(res => res.data)
+    .then(({status, message}) => {
+      if(status){
+        this.setState({
+          info: message
+        })
+      }
+      else {
+        this.setState({
+          err: message
+        })
+      }
+    })
   };
 
   render() {
@@ -139,7 +184,7 @@ export default class Signup extends Component {
     return (
       <>
         <header className={classes.header}>
-        <Link to="/" className={classes.brand}>
+          <Link to="/" className={classes.brand}>
             <h1>
               Live Chat <span></span>
             </h1>
@@ -157,7 +202,10 @@ export default class Signup extends Component {
             <Link className={classes["nav-item"]} to="/contactus">
               Contact Us
             </Link>
-            <a className={classes["nav-item"]} href="https://github.com/mfakyol/live-chat-front-end">
+            <a
+              className={classes["nav-item"]}
+              href="https://github.com/mfakyol/live-chat-front-end"
+            >
               Github
             </a>
           </div>

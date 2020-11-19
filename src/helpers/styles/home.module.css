@@ -215,14 +215,47 @@ form > h3 {
 
 form > hr {
   display: block;
-  margin: 10px 20px;
+  margin: 0px 20px;
   border-color: #8e44ad;
+}
+
+.err {
+  display: inline-block;
+  width: 100%;
+  height: 30px;
+  padding: 0px 20px;
+}
+
+.err > p {
+  position: relative;
+  width: 100%;
+  display: inline-block;
+  background-color: #e74c3c;
+  color: #fff;
+  font-weight: 400;
+  padding: 10px 25px;
+  font-family: 'Lato';
+  font-size: 15px ;
+  border-radius: 5px;
+}
+
+.err > p > i {
+  position: absolute;
+  top: 9px;
+  right: 10px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: .3s;
+}
+
+.err > p > i:hover {
+  color: #8e44ad;
 }
 
 .form-group {
   width: 100%;
   margin-top: 5px;
-  padding: 5px 20px;
+  padding: 10px 20px;
 }
 
 .form-group > span {

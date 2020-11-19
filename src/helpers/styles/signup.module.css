@@ -180,76 +180,75 @@ form > h3 {
   color: #601680;
 }
 
-.switch {
-  top: -5px;
-  margin-left: 10px;
-  display: inline-block;
-  position: absolute;
-  width: 200px;
-  height: 40px;
-  background-color: #bdc3c7;
-  border-radius: 5px;
-}
-
-.switch > input {
-  width: 0;
-  height: 0;
-  opacity: 0;
-}
-
-.switch > .slider {
-  display: inline-block;
-  position: absolute;
-  height: 39px;
-  width: 100%;
-  z-index: 10;
-}
-
-.switch > input + .slider::before {
-  content: "E-mail";
-  display: inline-flex;
-  width: 79px;
-  height: 100%;
-  align-items: center;
-  text-align: center;
-  font-size: 20px;
-  padding-left: 19px;
-  color: #fff;
-  background-color: #8e44ad;
-  border: 1px solid black;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
-  transition: 0.3s;
-}
-
-.switch > input + .slider::after {
-  content: "Phone";
-  width: 79px;
-  height: 100%;
-  display: inline-flex;
-  align-items: center;
-  padding-left: 19px;
-  font-size: 20px;
-  color: #fff;
-  background-color: none;
-  border: 1px solid black;
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
-  transition: 0.3s;
-}
-
-.switch > input:checked + .slider::before {
-  background-color: transparent;
-}
-
-.switch > input:checked + .slider::after {
-  background-color: #8e44ad;
-}
-
 form > hr {
   display: block;
   margin: 15px 20px;
   background-color: #601680;
+}
+
+.err {
+  display: inline-block;
+  width: 100%;
+  padding: 0px 20px;
+  margin-top: 5px;
+}
+
+.err > p {
+  position: relative;
+  width: 100%;
+  display: inline-block;
+  background-color: #e74c3c;
+  color: #fff;
+  font-weight: 400;
+  padding: 10px 25px;
+  font-family: 'Lato';
+  font-size: 15px ;
+  border-radius: 5px;
+}
+
+.err > p > i {
+  position: absolute;
+  top: 9px;
+  right: 10px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: .3s;
+}
+
+.err > p > i:hover {
+  color: #8e44ad;
+}
+
+.info {
+  display: inline-block;
+  width: 100%;
+  padding: 0px 20px;
+}
+
+.info > p {
+  position: relative;
+  width: 100%;
+  display: inline-block;
+  background-color: #3498db;
+  color: #fff;
+  font-weight: 400;
+  padding: 10px 25px;
+  font-family: 'Lato';
+  font-size: 15px ;
+  border-radius: 5px;
+}
+
+.info > p > i {
+  position: absolute;
+  top: 9px;
+  right: 10px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: .3s;
+}
+
+.info > p > i:hover {
+  color: #8e44ad;
 }
 
 .form-group {
