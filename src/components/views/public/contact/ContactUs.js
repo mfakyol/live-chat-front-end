@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import classes from "../../../helpers/styles/contact-us.module.css";
+import classes from "./contact-us.module.css";
 
 export default class ContactUs extends Component {
   render() {

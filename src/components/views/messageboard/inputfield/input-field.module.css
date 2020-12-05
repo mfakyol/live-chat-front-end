@@ -1,0 +1,75 @@
+.input-field {
+  position: relative;
+  display: flex;
+  width: 100%;
+  min-height: 50px;
+  background-color: #ecf0f1;
+  padding: 5px;
+}
+
+.image-button {
+  margin: 0;
+  width: 40px;
+  height: 40px;
+  border: none;
+  outline: none;
+  margin-left: 2px;
+  color: #8e44ad;
+  font-size: 20px;
+  padding: 0 5px;
+}
+
+.emoji-button {
+  margin: 0;
+  width: 40px;
+  height: 40px;
+  border: none;
+  outline: none;
+  margin-left: 2px;
+  color: #8e44ad;
+  font-size: 20px;
+  padding: 0 5px;
+  border-radius: 5px;
+  transition: 0.3s;
+}
+
+.emoji-button:hover {
+  background-color: #8e44ad;
+  color: #fff;
+}
+.emoji-button:active {
+  background-color: #c467ec;
+  color: #fff;
+}
+
+.input {
+  display: inline-block;
+  height: 38px;
+  margin-top: 2px;
+  margin-left: 2px;
+  width: 100%;
+  border-radius: 5px;
+  outline: none;
+  font-size: 18px;
+  padding: 7px 10px;
+  border: none;
+  resize: none;
+}
+
+.send-button {
+  margin: 0;
+  width: 40px;
+  height: 40px;
+  border: none;
+  outline: none;
+  margin-left: 2px;
+  color: #8e44ad;
+  font-size: 20px;
+  padding: 0 5px;
+  transition: 0.3s;
+}
+
+.send-button:active {
+  color: #fff;
+  background-color: #8e44ad;
+}

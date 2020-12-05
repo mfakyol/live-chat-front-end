@@ -1,4 +1,5 @@
 .main {
+  position: relative;
   display: inline-block;
   width: calc(100% - 260px);
   height: calc(100vh - 60px);
@@ -9,7 +10,7 @@
   background-color: #34495e;
   width: 100%;
   height: calc(100% - 50px);
-  overflow: auto;
+  overflow-y: scroll;
 }
 
 .message-board-header {
@@ -20,6 +21,7 @@
   height: 60px;
   background-color: #fff;
   text-align: center;
+  z-index: 1;
 }
 
 .message-board-header > img {
@@ -47,7 +49,7 @@
   font-weight: 600;
 }
 
-.message-board-header > i {
+.message-board-header > a {
   position: absolute;
   top: 14px;
   right: 10px;
@@ -56,71 +58,34 @@
   cursor: pointer;
 }
 
-.message-board-header > i:hover {
+.message-board-header > a:hover {
   color: #9b59b6;
 }
 
 .messages {
   display: block;
-  flex-wrap: wrap-reverse;
   width: 100%;
-  height: calc(100% - 60px);
+
   padding: 10px;
 }
 
-.message {
-  display: block;
-  margin: 10px 0;
-  min-width: 250px;
-  width: 100%;
-  overflow: auto;
+.day-info {
+  text-align: center;
+  padding: 10px 0;
 }
 
-.message > span {
-  display: inline-block;
-  max-width: 51%;
-  padding: 10px;
-  border-radius: 10px;
-  font-family: "Open Sans", sans-serif;
-  font-weight: 400;
-  font-size: 14px;
+.day-info > span {
+  background-color: rgba(100, 100, 100, .3);
+  color: #fff;
+  font-weight: 600;
+  padding: 3px 27px;
+  border-radius: 20px;
 }
 
-.message-left > span {
-  float: left;
-  background-color: #4acef7;
-}
-.message-right {
-  direction: rtl;
-}
-
-.message-right > span {
-  direction: ltr;
-  float: right;
-  background-color: #fff;
-}
-
-
-.message > span > .time {
-    float: right;
-    margin-right: 5px;
-    font-weight: 600;
-    color: #343b3b;
-}
 
 @media (max-width: 600px) {
   .main {
     width: 100%;
-  }
-
-  .message > span {
-    display: inline-block;
-    max-width: 70%;
-    padding: 10px;
-    border-radius: 10px;
-    font-family: "Open Sans", sans-serif;
-    font-weight: 400;
-    font-size: 14px;
   }
 }
 

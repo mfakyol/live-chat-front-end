@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom';
-import classes from "../../../helpers/styles/about.module.css";
+import classes from "./about.module.css";
 
 export default class About extends Component {
     render() {

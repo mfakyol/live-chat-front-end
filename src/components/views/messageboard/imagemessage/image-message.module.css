@@ -1,0 +1,107 @@
+.image-message {
+  display: block;
+  margin: 10px 0;
+  min-width: 250px;
+  width: 100%;
+  word-wrap: break-word;
+  overflow: auto;
+}
+
+.title {
+  padding: 2px 8px;
+}
+
+.image-message > .images {
+  width: 51%;
+  max-width: 300px;
+  padding: 5px 10px;
+  border-radius: 10px;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 400;
+  font-size: 15px;
+  background-color: #4acef7;
+}
+
+.image-message-left > span {
+  float: left;
+  background-color: #4acef7;
+}
+
+.image-message-right {
+  direction: rtl;
+}
+.image-message-right .images {
+  direction: ltr;
+  float: right;
+  background-color: #fff;
+}
+
+.image {
+  display: block;
+  margin-bottom: 10px;
+  width: 100%;
+  border: 2px solid rgba(100, 100, 100, 0.3);
+  border-radius: 5px;
+}
+
+.small-image-container {
+  position: relative;
+  display: block;
+  margin-bottom: 10px;
+  height: 160px;
+  width: 48%;
+  margin-left: 1%;
+  border-radius: 5px;
+  float: left;
+  background-color: rgba(100, 100, 100, 0.9);
+  z-index: 0;
+}
+
+.small-image-container > .small-image {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  max-width: 100%;
+  padding: 2px;
+  max-height: 150px;
+  transform: translate(-50%, -50%);
+  object-position: center;
+  z-index: 0;
+}
+
+
+.info {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.info > .seen-icon {
+  float: left;
+}
+
+.seenIcon > i {
+  display: inline-block;
+  color: #8e44ad;
+}
+
+
+.info > .time {
+  float: right;
+  margin-left: 15px;
+  font-weight: 600;
+  font-size: 12px;
+  color: #343b3b;
+}
+
+@media (max-width: 600px) {
+  .image-message > .images {
+    display: inline-block;
+    width: 80%;
+    padding: 10px;
+    border-radius: 10px;
+    font-family: "Open Sans", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+  }
+}

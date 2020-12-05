@@ -166,7 +166,7 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  background-image: url("../img/section-a-bg.png");
+  background-image: url("../../../../helpers//img/section-a-bg.png");
   text-align: center;
   border-bottom: 1px solid rgb(177, 174, 174);
 }

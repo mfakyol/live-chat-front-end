@@ -1,8 +1,9 @@
 import Axios from "axios";
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import classes from "../../../helpers/styles/home.module.css";
-import config from "../../../config";
+import { Link, Redirect } from "react-router-dom";
+import classes from "./home.module.css";
+import config from "../../../../config";
+import jwt from "jsonwebtoken";
 
 export default class Home extends Component {
   state = {
@@ -23,6 +24,7 @@ export default class Home extends Component {
       .then(({ status, message, token }) => {
         if (status) {
           localStorage.setItem("token", JSON.stringify(token));
+          this.props.history.push("/chat");
         } else {
           this.setState({
             err: message,
@@ -30,7 +32,6 @@ export default class Home extends Component {
           });
         }
       });
-    //fetch
   };
 
   handleChange = (e) => {
@@ -42,6 +43,10 @@ export default class Home extends Component {
   render() {
     const { email, password, err } = this.state;
 
+    let token = JSON.parse(localStorage.getItem("token"));
+    if (token && jwt.decode(token) && jwt.decode(token).apiKey) {
+      return <Redirect to="/chat" />;
+    }
     return (
       <>
         <header className={classes.header}>
@@ -112,7 +117,11 @@ export default class Home extends Component {
                 className={classes.err}
               >
                 <p>
-                  {err} <i onClick={(e) => this.setState({ err: "" })} className="fas fa-times"></i>
+                  {err}{" "}
+                  <i
+                    onClick={(e) => this.setState({ err: "" })}
+                    className="fas fa-times"
+                  ></i>
                 </p>
               </span>
 

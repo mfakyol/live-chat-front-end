@@ -1,16 +1,23 @@
 import React, { Component } from "react";
-import classes from "../../../helpers/styles/my-profile.module.css";
-import userImage from "../../../helpers/img/user.png";
+import classes from "./my-profile.module.css";
+import config from "../../../config";
 
 class MyProfile extends Component {
-  componentDidMount() {}
+  closeMyProfile(e) {
+    if (e.target.id === "background") {
+      this.props.toggleMyProfile();
+    }
+  }
+
   render() {
-    const { toggleMyProfile, isOpen } = this.props;
+    const { toggleMyProfile, isOpen, user } = this.props;
 
     return (
       <div
+        id="background"
         className={classes.background}
         style={{ display: isOpen ? "block" : "none" }}
+        onClick={this.closeMyProfile.bind(this)}
       >
         <div className={classes["profile-container"]}>
           <span
@@ -20,14 +27,14 @@ class MyProfile extends Component {
             <i className="fas fa-times"></i>
           </span>
           <div className={classes["user-image-container"]}>
-            <img className={classes["user-image"]} src={userImage} alt="" />
+            <img className={classes["user-image"]} src={`${config.apiDomain}/profileimages/${user.profileImage}`} alt="" />
           </div>
           <hr className={classes["hr"]} />
           <div className={classes["info-container"]}>
             <div className={classes.info}>
               <i className="fas fa-user"></i>
             </div>
-            <div className={classes["fullname"]}>Muhammed Fatih Akyol</div>
+            <div className={classes["fullname"]}>{user.fullName}</div>
             <div className={classes.edit}>
               <i className="far fa-edit"></i>
             </div>
@@ -37,10 +44,7 @@ class MyProfile extends Component {
             <div className={classes.info}>
               <i className="fas fa-pen"></i>
             </div>
-            <p className={classes["description"]}>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci
-              quo ratione enim porro molestiae optio!
-            </p>
+            <p className={classes["description"]}>{user.description}</p>
             <div className={classes.edit}>
               <i className="far fa-edit"></i>
             </div>

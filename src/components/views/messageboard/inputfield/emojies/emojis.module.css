@@ -1,0 +1,63 @@
+.emojis {
+  overflow: auto;
+  position: absolute;
+  top: -405%;
+  right: 60px;
+  max-width: 60%;
+  height: 400%;
+  border-radius: 5px;
+  background-color: #fff;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.recently > p {
+  background-color: #b0b0b0;
+  font-size: 17px;
+  padding: 5px;
+}
+
+.all > p {
+  background-color: #b0b0b0;
+  font-size: 17px;
+  padding: 5px;
+}
+
+.emoji {
+  padding: 3px;
+  font-size: 28px;
+  display: inline-block;
+  margin: 0 auto;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: 0.3s;
+}
+.emoji:hover {
+  background-color: #c0c0c0;
+}
+
+/* width */
+.emojis::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* Track */
+.emojis::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border: 2px solid #b0b0b0;
+}
+
+/* Handle */
+.emojis::-webkit-scrollbar-thumb {
+  background: #9b59b6;
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+.emojis::-webkit-scrollbar-thumb:hover {
+  background: #d881fa;
+}

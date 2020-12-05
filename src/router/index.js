@@ -5,10 +5,10 @@ import MessageBoard from "../components/views/messageboard/MessageBoard";
 import Main from "../components/layouts/Main";
 import Header from "../components/views/header/Header";
 import Sidebar from "../components/views/sidebar/Sidebar";
-import Home from "../components/views/public/Home";
-import Signup from "../components/views/public/Signup";
-import About from "../components/views/public/About";
-import ContactUs from "../components/views/public/ContactUs";
+import Home from "../components/views/public/home/Home";
+import Signup from "../components/views/public/signup/Signup";
+import About from "../components/views/public/about/About";
+import ContactUs from "../components/views/public/contact/ContactUs";
 
 export default () => {
   return (
@@ -25,7 +25,7 @@ export default () => {
             <Header />
             <Sidebar />
             <Switch>
-              <Route path="/chat/:id" exact component={MessageBoard} />
+              <Route path="/chat/:chatId" exact component={MessageBoard} />
             </Switch>
           </Main>
         </Route>

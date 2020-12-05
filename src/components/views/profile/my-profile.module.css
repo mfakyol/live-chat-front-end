@@ -134,9 +134,9 @@
 .description {
     display: inline-block;
     width: 80%;
-    padding: 5px 20px;
+    padding: 10px 20px;
     text-align: justify;
-    font-size:14px;
+    font-size:16px;
     font-family: 'Lato';
 }
 

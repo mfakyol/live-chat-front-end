@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import classes from "../../../helpers/styles/sidebar.module.css";
-import userImage from "../../../helpers/img/user.png";
-import { Link } from "react-router-dom";
+import classes from "./sidebar.module.css";
+import ChatListItem from "./ChatListItem";
+import { getChats } from "../../../redux/reducers/chatsReducer";
+import { connect } from "react-redux";
 
-export default class Sidebar extends Component {
+class Sidebar extends Component {
   componentDidMount() {
     if (window.innerWidth < 600) {
       this.setState({ isMobile: true });
@@ -33,6 +34,7 @@ export default class Sidebar extends Component {
 
   render() {
     const { isMobile, isOpen } = this.state;
+    const { chats } = this.props;
     return (
       <>
         <div
@@ -61,23 +63,24 @@ export default class Sidebar extends Component {
             ></i>
           </span>
           <ul className={classes.chats}>
-            <li className={classes.chat}>
-              <Link to="/chat/1">
-                {" "}
-                <img src={userImage} alt="" />
-                <span className={classes.username}>Fatih Akyol</span>
-                <span className={classes.unread}>6</span>
-              </Link>
-            </li>
-            <li className={classes.chat}>
-              <Link to="/chat/1">
-                <img src={userImage} alt="" />
-                <span className={classes.username}>Ali Veli</span>
-              </Link>
-            </li>
+            {chats.map((chat) => {
+              return <ChatListItem  key={chat._id} chat={chat} />;
+            })}
           </ul>
         </div>
       </>
     );
   }
 }
+
+const mapStateToProps = (state, props) => {
+  return { chats: state.chats };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onGetChats: () => dispatch(getChats()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Sidebar);
