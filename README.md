@@ -1,4 +1,4 @@
-# My default react redux starter kit repository
+# Live Chat app
 
 ## to start project:
 ### ->npm install
