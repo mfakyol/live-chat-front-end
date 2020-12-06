@@ -19,7 +19,6 @@ class Main extends Component {
       localStorage.clear();
       this.props.history.push("/");
     }
-    console.log("çalıştı");
     socket.on("connect", (e) => {
       console.log(e);
       console.log("connected");
@@ -29,19 +28,19 @@ class Main extends Component {
       this.props.ongetUser();
       this.props.onGetChats();
       socket.on("newMessage", (newMessage) => {
-        if(newMessage.chatId===this.props.match.params.path){
-          this.props.onPushMessage(newMessage)
-          socket.emit('setLastSeen',  newMessage.chatId, Date.now(), function(err, status){
-            
-          })
-        }
-        else {
-          this.props.onPushUnred(newMessage.chatId)
+        if (newMessage.chatId === this.props.match.params.path) {
+          this.props.onPushMessage(newMessage);
+          socket.emit(
+            "setLastSeen",
+            newMessage.chatId,
+            Date.now(),
+            function (err, status) {}
+          );
+        } else {
+          this.props.onPushUnred(newMessage.chatId);
         }
       });
     });
-
-
   }
 
   render() {

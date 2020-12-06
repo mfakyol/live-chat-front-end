@@ -15,7 +15,6 @@ export default function messagesReducer(state = [], { payload, type }) {
         if(seenDate > new Date(message.sentDate)){
           message.isSeen = true;
         }
-        console.log(message)
         return message;
       });
     case SET_MESSAGES:

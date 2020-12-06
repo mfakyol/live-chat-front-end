@@ -18,9 +18,13 @@ import { clearImages } from "../../../redux/reducers/imagesReducer";
 import socket from "../../../socket";
 
 class MessageBoard extends Component {
+
+  state = {
+    isOnline: false
+  }
   componentDidMount() {
     
-    socket.on("not", (chatId, date) => {
+    socket.on("setSeen", (chatId, date) => {
       console.log(chatId, date);
       if(this.props.match.params.chatId === chatId){
         this.props.onSetMessageSeen(date)
@@ -39,6 +43,10 @@ class MessageBoard extends Component {
     this.props.onGetLastMessages(chatId);
     this.props.onResetUnread(chatId)
     sendLastSeenDate(Date.now());
+    socket.on('isOnline',(status) => {
+      this.setState({isOnline:status})
+    })
+    socket.emit('connectUserStatus',chatId, (err, status) => { console.log("s: "+status); this.setState({isOnline: status})})
   }
 
   componentDidUpdate(prevProps) {
@@ -46,6 +54,8 @@ class MessageBoard extends Component {
     if (prevProps.match.params.chatId !== this.props.match.params.chatId) {
       this.props.onClearMessages();
       this.props.onClearImages();
+      socket.emit('disConnectUserStatus',prevProps.match.params.chatId )
+      socket.emit('connectUserStatus',this.props.match.params.chatId, (err, status) => { console.log("s: "+status); this.setState({isOnline: status})})
       const { chatId } = this.props.match.params;
       const sendLastSeenDate = (date) => {
         socket.emit('setLastSeen',  chatId, date, function(err, status){
@@ -82,7 +92,7 @@ class MessageBoard extends Component {
   render() {
     let lastDate = undefined;
     const { chatId } = this.props.match.params;
-    const { profileIsOpen } = this.state;
+    const { profileIsOpen, isOnline } = this.state;
     const { chats, messages } = this.props;
     const userData = chats.filter((chat) => chat._id === chatId)[0];
     return (
@@ -101,7 +111,7 @@ class MessageBoard extends Component {
                 >
                   {userData.user.fullName}
                 </span>
-                <span className={classes.status}> Offline</span>
+            <span className={classes.status}> {isOnline ? "Online" : "Offline"}</span>
                 <Link to="/chat">
                   {" "}
                   <i className="fas fa-times"></i>
