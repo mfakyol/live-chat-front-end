@@ -38,6 +38,7 @@
 }
 
 .time {
+  user-select: none;
   margin-left: 15px;
   font-weight: 600;
   font-size: 12px;
@@ -46,7 +47,7 @@
 
 .seenIcon > i {
   display: inline-block;
-  color: #8e44ad;
+  color: #34495E;
 }
 
 @media (max-width: 600px) {

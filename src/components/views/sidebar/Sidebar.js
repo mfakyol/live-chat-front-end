@@ -3,25 +3,32 @@ import classes from "./sidebar.module.css";
 import ChatListItem from "./ChatListItem";
 import { getChats } from "../../../redux/reducers/chatsReducer";
 import { connect } from "react-redux";
+import socket from "../../../socket";
+import config from "../../../config";
 
 class Sidebar extends Component {
+  state = {
+    isMobile: false,
+    isOpen: true,
+    filter: "",
+    isAddChatOpen: false,
+    searchInput: "",
+    user: null,
+    err: "",
+  };
+
   componentDidMount() {
-    if (window.innerWidth < 600) {
+    if (window.innerWidth < 800) {
       this.setState({ isMobile: true });
     }
     window.addEventListener("resize", (e) => {
-      if (window.innerWidth < 600 && !this.state.isMobile) {
-        this.setState({ isMobile: true });
-      } else if (window.innerWidth > 600 && this.state.isMobile) {
+      if (window.innerWidth < 800 && !this.state.isMobile) {
+        this.setState({ isMobile: true, isAddChatOpen: false });
+      } else if (window.innerWidth > 800 && this.state.isMobile) {
         this.setState({ isMobile: false });
       }
     });
   }
-
-  state = {
-    isMobile: false,
-    isOpen: false,
-  };
 
   closeSidebar(e) {
     const sidebar = document.querySelector("#sidebar");
@@ -29,11 +36,82 @@ class Sidebar extends Component {
     sidebar.style.transform = "translateX(-300px)";
     this.setState({
       isOpen: false,
+      isAddChatOpen: false,
+      searchInput: "",
+      user: null,
+    });
+  }
+  closeSidebarEvent() {
+    this.setState({
+      isOpen: false,
+      isAddChatOpen: false,
+      searchInput: "",
+      user: null,
+    });
+  }
+
+  toggleAddChat(e) {
+    this.setState({
+      isAddChatOpen: !this.state.isAddChatOpen,
+      searchInput: "",
+      user: null,
+    });
+    return false;
+  }
+
+  search(e) {
+    const { searchInput } = this.state;
+    this.setState({
+      err: "",
+      user: null,
+    });
+    if (searchInput.trim() !== "") {
+      socket.emit("searchUser", searchInput, (err, user) => {
+        if (!err) {
+          this.setState({
+            user,
+          });
+        } else {
+          this.setState({
+            err,
+          });
+        }
+      });
+    }
+  }
+
+  addUser(userId, e) {
+    console.log(userId);
+    socket.emit("sendRequest", userId, (err, status) => {
+      if (!err) {
+        this.setState({
+          user: { ...this.state.user, status },
+        });
+        console.log(status);
+      } else {
+        this.setState({
+          err,
+        });
+      }
+    });
+  }
+
+  onChangeHandle(e) {
+    this.setState({
+      [e.target.name]: e.target.value,
     });
   }
 
   render() {
-    const { isMobile, isOpen } = this.state;
+    const {
+      isMobile,
+      isOpen,
+      filter,
+      isAddChatOpen,
+      searchInput,
+      user,
+      err,
+    } = this.state;
     const { chats } = this.props;
     return (
       <>
@@ -54,19 +132,85 @@ class Sidebar extends Component {
           style={{ transform: isMobile && isOpen ? "translate(0)" : "" }}
           className={classes.sidebar}
         >
-          <span className={classes["sidebar-header"]}>
-            CHATS{" "}
+          <div className={classes["sidebar-header"]}>
+            <b>CHATS</b>
+            <span onClick={this.toggleAddChat.bind(this)}>
+              <i className="fas fa-plus"></i> Add User
+            </span>
             <i
               style={{ display: isMobile ? "block" : "none" }}
               onClick={this.closeSidebar.bind(this)}
               className="fas fa-times"
             ></i>
-          </span>
-          <ul className={classes.chats}>
-            {chats.map((chat) => {
-              return <ChatListItem  key={chat._id} chat={chat} />;
-            })}
-          </ul>
+            <hr />
+            <input
+              className={classes["filter-input"]}
+              type="text"
+              name="filter"
+              value={filter}
+              onChange={this.onChangeHandle.bind(this)}
+              placeholder="filter by name"
+            />
+          </div>
+
+          <div className={classes["chats"]}>
+            {chats
+              .filter((chat) =>
+                chat.user.fullName
+                  .toLowerCase()
+                  .includes(filter.toLocaleLowerCase())
+              )
+              .map((chat) => {
+                return (
+                  <ChatListItem
+                    closeSidebar={this.closeSidebarEvent.bind(this)}
+                    key={chat._id}
+                    chat={chat}
+                  />
+                );
+              })}
+          </div>
+          <div
+            style={{ display: isAddChatOpen ? "block" : "none" }}
+            className={classes["add-chat-container"]}
+          >
+            <input
+              onChange={this.onChangeHandle.bind(this)}
+              className={classes["search-user-input"]}
+              type="text"
+              name="searchInput"
+              value={searchInput}
+              placeholder="user id"
+            />
+            <button
+              onClick={this.search.bind(this)}
+              className={classes["search-user-button"]}
+            >
+              Search
+            </button>
+            <hr />
+            {err ? <p>{err}</p> : ""}
+            {user ? (
+              <div className={classes["search-result"]}>
+                <img
+                  src={`${config.apiDomain}/profileImages/${user.profileImage}`}
+                  alt=""
+                />
+                <span title={user.fullName}>{user.fullName}</span>
+                {user.status ? (
+                  <i className="fas fa-check"></i>
+                ) : (
+                  <i
+                    onClick={this.addUser.bind(this, user._id)}
+                    className="fas fa-plus"
+                  ></i>
+                )}
+              </div>
+            ) : (
+              ""
+            )}
+          </div>
+          <div className={classes["add-chat-background"]}></div>
         </div>
       </>
     );

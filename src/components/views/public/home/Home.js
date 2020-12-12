@@ -24,7 +24,7 @@ export default class Home extends Component {
       .then(({ status, message, token }) => {
         if (status) {
           localStorage.setItem("token", JSON.stringify(token));
-          this.props.history.push("/chat");
+          window.location.reload();
         } else {
           this.setState({
             err: message,

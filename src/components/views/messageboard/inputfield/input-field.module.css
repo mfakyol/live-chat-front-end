@@ -3,24 +3,13 @@
   display: flex;
   width: 100%;
   min-height: 50px;
-  background-color: #ecf0f1;
+  background-color: #34495E;
   padding: 5px;
 }
 
 .image-button {
-  margin: 0;
-  width: 40px;
-  height: 40px;
-  border: none;
-  outline: none;
-  margin-left: 2px;
-  color: #8e44ad;
-  font-size: 20px;
-  padding: 0 5px;
-}
-
-.emoji-button {
-  margin: 0;
+  position: relative;
+  margin-right: 5px;
   width: 40px;
   height: 40px;
   border: none;
@@ -30,13 +19,54 @@
   font-size: 20px;
   padding: 0 5px;
   border-radius: 5px;
+  transition: .3s;
+  box-shadow: 0px 0px 2px  rgba(10, 10, 10, .7);
+}
+
+.image-button:hover {
+  background-color: #8e44ad;
+  color: #fff;
+}
+
+.image-button:active {
+  background-color: #c467ec;
+  color: #fff;
+}
+
+.image-button > i {
+  position: absolute;
+  top: 52%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.emoji-button {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 40px;
+  border: none;
+  outline: none;
+  margin: 0 5px;
+  color: #8e44ad;
+  font-size: 22px;
+  border-radius: 5px;
   transition: 0.3s;
+  box-shadow: 0px 0px 5px  rgba(10, 10, 10, .7);
+}
+
+.emoji-button > i {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .emoji-button:hover {
   background-color: #8e44ad;
   color: #fff;
 }
+
 .emoji-button:active {
   background-color: #c467ec;
   color: #fff;
@@ -44,9 +74,7 @@
 
 .input {
   display: inline-block;
-  height: 38px;
-  margin-top: 2px;
-  margin-left: 2px;
+  height: 40px;
   width: 100%;
   border-radius: 5px;
   outline: none;
@@ -54,10 +82,11 @@
   padding: 7px 10px;
   border: none;
   resize: none;
+  box-shadow: 0px 0px 5px  rgba(10, 10, 10, .7);
 }
 
 .send-button {
-  margin: 0;
+  margin-right: 5px;
   width: 40px;
   height: 40px;
   border: none;
@@ -67,7 +96,15 @@
   font-size: 20px;
   padding: 0 5px;
   transition: 0.3s;
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px  rgba(10, 10, 10, .7);
 }
+
+.send-button:hover {
+  background-color: #8e44ad;
+  color: #fff;
+}
+
 
 .send-button:active {
   color: #fff;

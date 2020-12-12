@@ -3,6 +3,16 @@ import classes from "./image-message.module.css";
 import config from "../../../../config";
 
 export default class ImageMessage extends Component {
+  openImage(e) {
+    if (e.target.localName === "img") {
+      console.log('dd')
+      window.open(e.target.src, "_blank");
+      return
+    }
+    window.open(e.target.children[0].src, "_blank");
+   
+  }
+
   render() {
     const { isLeft, message } = this.props;
     return (
@@ -15,9 +25,9 @@ export default class ImageMessage extends Component {
       >
         <div className={classes.images}>
           <p className={classes["title"]}>{message.content.title}</p>
-          {message.content.images.length > 2
+          {message.content.images.length > 1
             ? message.content.images.map((image) => (
-                <div key={image} className={classes["small-image-container"]}>
+                <div onClick={this.openImage.bind(this)} key={image} className={classes["small-image-container"]}>
                   <img
                     className={classes["small-image"]}
                     src={`${
@@ -30,16 +40,17 @@ export default class ImageMessage extends Component {
                 </div>
               ))
             : message.content.images.map((image) => (
-                <img
-                  key={image}
-                  className={classes["image"]}
-                  src={`${
-                    config.apiDomain
-                  }/messages/getimage/${image}?token=${JSON.parse(
-                    localStorage.getItem("token")
-                  )}`}
-                  alt=""
-                />
+                <div onClick={this.openImage.bind(this)} key={image} className={classes["image-container"]}>
+                  <img
+                    className={classes["image"]}
+                    src={`${
+                      config.apiDomain
+                    }/messages/getimage/${image}?token=${JSON.parse(
+                      localStorage.getItem("token")
+                    )}`}
+                    alt=""
+                  />
+                </div>
               ))}
           <div className={classes["info"]}>
             <span className={classes.seenIcon}>

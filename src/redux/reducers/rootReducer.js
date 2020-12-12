@@ -5,6 +5,7 @@ import chats from "./chatsReducer";
 import unReads from "./unreadsReducer";
 import messages from "./messagesReducer";
 import images from "./imagesReducer";
+import notifications from "./notificationsReducer";
 
 export default combineReducers({
   example,
@@ -12,5 +13,6 @@ export default combineReducers({
   chats,
   unReads,
   messages,
-  images
+  images,
+  notifications
 });

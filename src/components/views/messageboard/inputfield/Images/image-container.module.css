@@ -35,11 +35,50 @@
   float: left;
   width: calc(100% / 3);
   height: 200px;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.2);
   border: 5px solid white;
-  border-radius: 5px;
+  border-radius: 10px;
+  overflow: hidden;
 
 }
+
+.new-image-container {
+  position: relative;
+  display: block;
+  float: left;
+  width: calc(100% / 3);
+  height: 200px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border: 5px solid white;
+  border-radius: 5px;
+  transition: .3s;
+  cursor: pointer;
+}
+
+.new-image-container > i {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 50px;
+  color: #fff;
+  transition: .3s;
+}
+
+.new-image-container:hover  {
+background-color: #fff;
+border: 2px solid rgba(0, 0, 0, 0.2);
+}
+
+.new-image-container:hover > i {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 50px;
+  color: #8e44ad;
+}
+
 .image-container > img {
   position: absolute;
   top: 50%;
@@ -48,6 +87,32 @@
   max-width: 100%;
   max-height: 100%;
   padding: 1px;
+}
+
+.delete-container{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(10, 10, 10, .7);
+  opacity: 0;
+  transition: .5s;
+}
+
+.delete-container > i {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 100%;
+  max-height: 100%;
+  font-size: 40px;
+  color: #fff;
+
+
+}
+
+.image-container:hover > .delete-container {
+  opacity: 1;
 }
 
 .send-image-container {
@@ -61,6 +126,9 @@
   height: 32px;
   margin-left: 5px;
   outline: none;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0px 0px 2px rgba(10, 10, 10, .7);
   text-indent: 10px;
   font-size: 18px;
 }

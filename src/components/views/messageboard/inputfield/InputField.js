@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { updateChatLastDate } from "../../../../redux/reducers/chatsReducer";
 import { pushImages } from "../../../../redux/reducers/imagesReducer";
 import { pushMessage } from "../../../../redux/reducers/messagesReducer";
 import socket from "../../../../socket";
@@ -54,7 +55,7 @@ class InputField extends Component {
   }
 
   sendMessage(e) {
-    const { onPushMessage } = this.props;
+    const { onPushMessage, onUpdateChatLastDate } = this.props;
     this.setState({
       emojisIsOpen: false,
       content: "",
@@ -72,8 +73,10 @@ class InputField extends Component {
       socket.emit("sendMessage", messageData, function (err, message) {
         if (!err) {
           onPushMessage(message);
+          onUpdateChatLastDate(message.chatId, message.sentDate)
         }
       });
+      document.querySelector('#content').focus()
     }
   }
 
@@ -90,19 +93,20 @@ class InputField extends Component {
         <input
           id="imageInput"
           onChange={this.selectImages.bind(this)}
+          onFocus={() => this.props.scrollToBottom()}
           style={{ display: "none" }}
           type="file"
           accept="image/x-png,image/gif,image/jpeg"
           multiple
         />
         <textarea
+          id="content"
           name="content"
           value={content}
           onChange={this.onChangeHandle.bind(this)}
           className={classes.input}
           placeholder="Text here"
           type="text"
-          autoFocus
         />
         <button
           onClick={this.toggleEmojiContainer.bind(this)}
@@ -129,6 +133,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onPushMessage: (message) => dispatch(pushMessage(message)),
     onPushImages: (images) => dispatch(pushImages(images)),
+    onUpdateChatLastDate: (chatId, date) => dispatch(updateChatLastDate(chatId, date)),
   };
 };
 

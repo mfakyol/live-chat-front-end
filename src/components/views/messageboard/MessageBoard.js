@@ -18,35 +18,36 @@ import { clearImages } from "../../../redux/reducers/imagesReducer";
 import socket from "../../../socket";
 
 class MessageBoard extends Component {
-
   state = {
-    isOnline: false
-  }
+    isOnline: false,
+    profileIsOpen: false,
+  };  
   componentDidMount() {
-    
     socket.on("setSeen", (chatId, date) => {
-      console.log(chatId, date);
-      if(this.props.match.params.chatId === chatId){
-        this.props.onSetMessageSeen(date)
+      if (this.props.match.params.chatId === chatId) {
+        this.props.onSetMessageSeen(date);
       }
     });
     const { chatId } = this.props.match.params;
     const sendLastSeenDate = (date) => {
-     socket.emit('setLastSeen',  chatId, date, function(err, status){
-       if(err){
-         setTimeout(() => {
-           sendLastSeenDate(Date.now())
-         }, 1000);
-       }
-     })
+      socket.emit("setLastSeen", chatId, date, function (err, status) {
+        if (err) {
+          setTimeout(() => {
+            sendLastSeenDate(Date.now());
+          }, 1000);
+        }
+      });
     };
     this.props.onGetLastMessages(chatId);
-    this.props.onResetUnread(chatId)
+    this.props.onResetUnread(chatId);
     sendLastSeenDate(Date.now());
-    socket.on('isOnline',(status) => {
-      this.setState({isOnline:status})
-    })
-    socket.emit('connectUserStatus',chatId, (err, status) => { console.log("s: "+status); this.setState({isOnline: status})})
+    socket.on("isOnline", (status) => {
+      this.setState({ isOnline: status });
+    });
+    socket.emit("connectUserStatus", chatId, (err, status) => {
+      console.log("s: " + status);
+      this.setState({ isOnline: status });
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -54,33 +55,37 @@ class MessageBoard extends Component {
     if (prevProps.match.params.chatId !== this.props.match.params.chatId) {
       this.props.onClearMessages();
       this.props.onClearImages();
-      socket.emit('disConnectUserStatus',prevProps.match.params.chatId )
-      socket.emit('connectUserStatus',this.props.match.params.chatId, (err, status) => { console.log("s: "+status); this.setState({isOnline: status})})
+      this.setState({ profileIsOpen: false });
+      socket.emit("disConnectUserStatus", prevProps.match.params.chatId);
+      socket.emit(
+        "connectUserStatus",
+        this.props.match.params.chatId,
+        (err, status) => {
+          this.setState({ isOnline: status });
+        }
+      );
       const { chatId } = this.props.match.params;
       const sendLastSeenDate = (date) => {
-        socket.emit('setLastSeen',  chatId, date, function(err, status){
-          if(err){
+        socket.emit("setLastSeen", chatId, date, function (err, status) {
+          if (err) {
             setTimeout(() => {
-              sendLastSeenDate(Date.now())
+              sendLastSeenDate(Date.now());
             }, 1000);
           }
-        })
-       };
-       this.props.onGetLastMessages(chatId);
-       this.props.onResetUnread(chatId)
-       sendLastSeenDate(Date.now());
+        });
+      };
+      this.props.onGetLastMessages(chatId);
+      this.props.onResetUnread(chatId);
+      sendLastSeenDate(Date.now());
     }
   }
 
-  componentWillUnmount() {
+  async componentWillUnmount() {
     this.props.onClearMessages();
   }
-  state = {
-    profileIsOpen: false,
-  };
+
   scrollToBottom = () => {
-    const { messageList } = this.refs;
-    messageList.scrollIntoView({ block: "end", inline: "nearest" });
+    this.messagesEnd.scrollIntoView({});
   };
 
   toggleProfile(e) {
@@ -111,9 +116,10 @@ class MessageBoard extends Component {
                 >
                   {userData.user.fullName}
                 </span>
-            <span className={classes.status}> {isOnline ? "Online" : "Offline"}</span>
+                <span className={classes.status}>
+                  {isOnline ? "Online" : "Offline"}
+                </span>
                 <Link to="/chat">
-                  {" "}
                   <i className="fas fa-times"></i>
                 </Link>
 
@@ -125,7 +131,16 @@ class MessageBoard extends Component {
               </>
             ) : null}
           </div>
-          <div ref="messageList" className={classes.messages}>
+          <div id="messageList" className={classes.messages}>
+            {messages.length > 0 ? (
+              <div className={classes["day-info"]}>
+                <span>
+                  {`${new Date(messages[0].sentDate).getDate()}  ${new Date(messages[0].sentDate).toLocaleString("default", { month: "long" })}`
+
+                  }
+                </span>
+              </div>
+            ) : null}
             {messages.map((message) => {
               let isLeft = false;
               let newDay = false;
@@ -149,32 +164,32 @@ class MessageBoard extends Component {
                   {newDay ? (
                     <div className={classes["day-info"]}>
                       <span>
-                      {date.getDay() +
-                        " " +
-                        date.toLocaleString("default", { month: "long" })}
+                        {date.getDate() +
+                          " " +
+                          date.toLocaleString("default", { month: "long" })}
                       </span>
                     </div>
                   ) : (
                     ""
                   )}
                   {message.type === 0 ? (
-                    <TextMessage
-                      message={message}
-                      isLeft={isLeft}
-                    />
+                    <TextMessage message={message} isLeft={isLeft} />
                   ) : message.type === 1 ? (
-                    <ImageMessage
-                      message={message}
-                      isLeft={isLeft}
-                    />
+                    <ImageMessage message={message} isLeft={isLeft} />
                   ) : null}
                 </React.Fragment>
               );
             })}
+            <div
+              style={{ float: "left", clear: "both" }}
+              ref={(el) => {
+                this.messagesEnd = el;
+              }}
+            ></div>
           </div>
         </div>
         <ImageContainer chatId={chatId} />
-        <InputField chatId={chatId} />
+        <InputField scrollToBottom = {this.scrollToBottom.bind(this)} chatId={chatId} />
       </main>
     );
   }
@@ -190,7 +205,8 @@ const mapDispatchToProps = (dispatch) => {
     onClearMessages: () => dispatch(clearMessages()),
     onClearImages: () => dispatch(clearImages()),
     onResetUnread: (chatId) => dispatch(resetUnread(chatId)),
-    onGetLastMessages: (chatId, offset) => dispatch(getLastMessages(chatId, offset)),
+    onGetLastMessages: (chatId, offset) =>
+      dispatch(getLastMessages(chatId, offset)),
   };
 };
 

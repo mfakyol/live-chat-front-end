@@ -10,9 +10,9 @@ const SET_MESSAGE_SEEN = "SET_MESSAGE_SEEN";
 export default function messagesReducer(state = [], { payload, type }) {
   switch (type) {
     case SET_MESSAGE_SEEN:
-      const seenDate = new Date(payload.data)
+      const seenDate = new Date(payload.data);
       return state.map((message) => {
-        if(seenDate > new Date(message.sentDate)){
+        if (seenDate > new Date(message.sentDate)) {
           message.isSeen = true;
         }
         return message;
@@ -73,21 +73,5 @@ export function getLastMessages(chatId) {
         dispatch(setMessages(messages));
       }
     });
-  };
-}
-
-export function sendImageMessage(chatId, imageMessageItem) {
-  return (dispatch) => {
-    console.log(imageMessageItem);
-    socket.emit(
-      "sendImageMessage",
-      chatId,
-      imageMessageItem,
-      function (err, imageMessage) {
-        if (!err) {
-          dispatch(pushMessage(imageMessage));
-        }
-      }
-    );
   };
 }

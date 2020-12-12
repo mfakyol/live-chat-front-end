@@ -9,10 +9,11 @@ import config from "../../../config";
 class Header extends Component {
   state = {
     myProfile: false,
+    notificationsIsOpen: false
   };
 
   openAccountMenu(e) {
-    const menu = e.target.nextSibling.nextSibling;
+    const menu = e.target.nextSibling;
     if (menu.style.display !== "inline-block") {
       menu.style.display = "inline-block";
       const closeAccountMenu = (e) => {
@@ -23,6 +24,11 @@ class Header extends Component {
       };
       document.addEventListener("click", closeAccountMenu);
     }
+  }
+  toggleNotification(){
+    this.setState({
+      notificationsIsOpen: !this.state.notificationsIsOpen
+    })
   }
 
   toggleMyProfile(e) {
@@ -35,7 +41,8 @@ class Header extends Component {
   }
 
   render() {
-    const { user } = this.props;
+    const { user, notifications } = this.props;
+    const { notificationsIsOpen } = this.state;
     return (
       <header className={classes.header}>
         <Link to="/" className={classes.brand}>
@@ -43,9 +50,22 @@ class Header extends Component {
             Live Chat <span></span>
           </h1>
         </Link>
+        Id: {user.shortId} 
+        <div className={classes["notification-container"]}>
+        <i onClick={this.toggleNotification.bind(this)} className="fas fa-bell"></i>
+        <div style={{display: notificationsIsOpen ? "block" : "none"}} className={classes["notification-list"]}>
+          <h3>Notifications</h3>
+          <hr/>
+          {notifications.map(notification => (<div className={classes["notification"]}>
+            <img src={`${config.apiDomain}/profileImages/${notification.sender.profileImage}`} alt=""/>
+            <span><b>{notification.sender.fullName}</b> sent friend request</span>
+            <i className= {`${classes["accept"]} fas fa-check`}></i>
+            <i className= {`${classes["reject"]} fas fa-times`}></i>
+          </div>))}
+        </div>
+        </div>
         {user.profileImage ? (
           <>
-            {" "}
             <div className={classes.account}>
               <img
                 onClick={this.openAccountMenu.bind(this)}
@@ -53,7 +73,6 @@ class Header extends Component {
                 src={`${config.apiDomain}/profileimages/${user.profileImage}`}
                 alt=""
               />
-              <span className={classes.online}></span>
               <div id="account-menu" className={classes["account-menu"]}>
                 <span className={classes["account-info"]}>
                   <img
@@ -69,7 +88,6 @@ class Header extends Component {
                       onClick={this.toggleMyProfile.bind(this)}
                       className={classes["menu-item"]}
                     >
-                      {" "}
                       Profile
                     </span>
                     <span
@@ -95,7 +113,7 @@ class Header extends Component {
 }
 
 const mapStateToProps = (state, props) => {
-  return { user: state.user };
+  return { user: state.user, notifications: state.notifications };
 };
 
 // const mapDispatchToProps = {

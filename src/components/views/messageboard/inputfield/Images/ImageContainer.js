@@ -4,12 +4,17 @@ import classes from "./image-container.module.css";
 import {
   clearImages,
   pushImages,
+  removeImage,
 } from "../../../../../redux/reducers/imagesReducer";
-import { sendImageMessage } from "../../../../../redux/reducers/messagesReducer";
+import { pushMessage } from "../../../../../redux/reducers/messagesReducer";
+import { updateChatLastDate } from "../../../../../redux/reducers/chatsReducer";
+import socket from "../../../../../socket";
+
 
 class ImageContainer extends Component {
   state = {
     title: "",
+    newImages: [],
   };
 
   onChangeHandle(e) {
@@ -22,12 +27,30 @@ class ImageContainer extends Component {
     if (e.target.id === "background") {
       e.target.style.display = "none";
       this.props.onClearImages();
+      this.setState({
+        title: ''
+      })
     }
+  }
+
+  openNewImageInput(e) {
+    document.getElementById("addImageInput").click();
+  }
+
+  addNewImages(e) {
+    const newImages = Array.from(e.target.files).map((file) =>
+      window.URL.createObjectURL(file)
+    );
+    this.props.onPushImages(newImages);
+  }
+
+  removeImage(index, e) {
+    this.props.onRemoveImage(index);
   }
 
   async sendImages() {
     const { title } = this.state;
-    const { chatId } = this.props;
+    const { chatId, onPushMessage, onUpdateChatLastDate } = this.props;
     let images = [];
     await Promise.all(
       this.props.images.map(async (imageLink) => {
@@ -39,7 +62,14 @@ class ImageContainer extends Component {
           .catch((err) => console.log(err));
       })
     );
-    this.props.onSendImageMessage(chatId, { title, images });
+    socket.emit("sendImageMessage", chatId, { title, images }, function (err, message) {
+      if (!err) {
+        onPushMessage(message);
+        onUpdateChatLastDate(chatId, message.sentDate)
+      }
+    });
+
+    
     this.props.onClearImages();
     this.setState({
       title: "",
@@ -48,6 +78,7 @@ class ImageContainer extends Component {
 
   render() {
     const { images } = this.props;
+    const { newImages } = this.state;
     return (
       <div
         style={{ display: images.length ? "block" : "none" }}
@@ -65,9 +96,30 @@ class ImageContainer extends Component {
                   className={classes["image-container"]}
                 >
                   <img src={image} alt="" />
+                  <div
+                    onClick={this.removeImage.bind(this, index)}
+                    className={classes["delete-container"]}
+                  >
+                    <i className="fas fa-trash-alt"></i>
+                  </div>
                 </div>
               );
             })}
+            <div
+              onClick={this.openNewImageInput.bind(this)}
+              className={classes["new-image-container"]}
+            >
+              <i className="fas fa-plus"></i>
+            </div>
+            <input
+              style={{ display: "none" }}
+              type="file"
+              value={newImages}
+              onChange={this.addNewImages.bind(this)}
+              id="addImageInput"
+              accept="image/x-png,image/gif,image/jpeg"
+              multiple
+            />
           </div>
           <div className={classes["send-image-container"]}>
             <input
@@ -77,6 +129,8 @@ class ImageContainer extends Component {
               className={classes["title"]}
               autoFocus
               type="text"
+              placeholder="Text here"
+              autoComplete="off"
             />
             <button
               onClick={this.sendImages.bind(this)}
@@ -98,9 +152,11 @@ const mapStateToProps = (state, props) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onClearImages: () => dispatch(clearImages()),
+    onRemoveImage: (index) => dispatch(removeImage(index)),
     onPushImages: (images) => dispatch(pushImages(images)),
-    onSendImageMessage: (chatId, imageMessage) =>
-      dispatch(sendImageMessage(chatId, imageMessage)),
+    onPushMessage: (message) => dispatch(pushMessage(message)),
+    onUpdateChatLastDate: (chatId, date) => dispatch(updateChatLastDate(chatId, date)),
+
   };
 };
 

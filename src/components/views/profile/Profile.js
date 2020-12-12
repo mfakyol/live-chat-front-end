@@ -33,7 +33,7 @@ export default class Profile extends Component {
             <div className={classes.info}>
               <i className="fas fa-pen"></i>
             </div>
-            <p className={classes["description"]}>{user.description}</p>
+            <p className={classes["description"]}>{user.description ? user.description : "No context"}</p>
           </div>
           <hr className={classes["hr"]} />
         </div>

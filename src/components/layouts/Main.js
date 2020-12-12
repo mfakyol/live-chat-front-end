@@ -5,9 +5,10 @@ import jwt from "jsonwebtoken";
 import { connect } from "react-redux";
 import { getUser } from "../../redux/reducers/userReducer";
 import { pushUnread } from "../../redux/reducers/unreadsReducer";
-import { getChats } from "../../redux/reducers/chatsReducer";
+import { getChats, updateChatLastDate } from "../../redux/reducers/chatsReducer";
 import { pushMessage } from "../../redux/reducers/messagesReducer";
 import socket from "../../socket";
+import { getNotifications } from "../../redux/reducers/notificationsReducer";
 
 class Main extends Component {
   componentDidMount() {
@@ -27,9 +28,11 @@ class Main extends Component {
     socket.on("connected", () => {
       this.props.ongetUser();
       this.props.onGetChats();
+      this.props.onGetNotifications();
       socket.on("newMessage", (newMessage) => {
+        const {onUpdateChatLastDate, onPushMessage, onPushUnred} = this.props;
         if (newMessage.chatId === this.props.match.params.path) {
-          this.props.onPushMessage(newMessage);
+          onPushMessage(newMessage);
           socket.emit(
             "setLastSeen",
             newMessage.chatId,
@@ -37,8 +40,9 @@ class Main extends Component {
             function (err, status) {}
           );
         } else {
-          this.props.onPushUnred(newMessage.chatId);
+          onPushUnred(newMessage.chatId);
         }
+        onUpdateChatLastDate(newMessage.chatId, newMessage.sentDate)
       });
     });
   }
@@ -55,9 +59,12 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     ongetUser: () => dispatch(getUser()),
-    onPushUnred: (chatId) => dispatch(pushUnread(chatId)),
-    onPushMessage: (message) => dispatch(pushMessage(message)),
     onGetChats: () => dispatch(getChats()),
+    onPushUnred: (chatId) => dispatch(pushUnread(chatId)),
+    onGetNotifications: () => dispatch(getNotifications()),
+    onPushMessage: (message) => dispatch(pushMessage(message)),
+    onUpdateChatLastDate: (chatId, date) => dispatch(updateChatLastDate(chatId, date)),
+    
   };
 };
 

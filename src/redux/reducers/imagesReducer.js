@@ -1,4 +1,3 @@
-
 //ActionTypes
 
 const CLEAR_IMAGES = "CLEAR_IMAGES";
@@ -10,8 +9,13 @@ export default function imagesReducer(state = [], { type, payload }) {
   switch (type) {
     case PUSH_IMAGES:
       return [...state, ...payload.data];
+
     case REMOVE_IMAGE:
-      return [...state.filter((image, index) => index === payload.index)];
+      return [
+        ...state.filter((image, index) => {
+          return index !== payload.data;
+        }),
+      ];
     case CLEAR_IMAGES:
       return [];
     default:
@@ -29,11 +33,11 @@ export function pushImages(data) {
     },
   };
 }
-export function removeImage(index) {
+export function removeImage(data) {
   return {
     type: REMOVE_IMAGE,
     payload: {
-      index,
+      data,
     },
   };
 }

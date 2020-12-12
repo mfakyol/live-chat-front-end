@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import classes from "./sidebar.module.css";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
 import { getUnreads } from "../../../redux/reducers/unreadsReducer";
 import config from "../../../config";
@@ -14,21 +14,22 @@ class ChatListItem extends Component {
   render() {
     const { chat, unReads } = this.props;
     return (
-      <li className={classes.chat}>
-        <Link to={`/chat/${chat._id}`}>
-          <img
-            src={`${config.apiDomain}/profileimages/${chat.user.profileImage}`}
-            alt=""
-          />
-          <span className={classes.username}>{chat.user.fullName}</span>
-          <span
-            style={{ display: unReads[chat._id] ? "block" : "none" }}
-            className={classes.unread}
-          >
-            {unReads[chat._id]}
-          </span>
-        </Link>
-      </li>
+      <NavLink
+      onClick={() => this.props.closeSidebar()}
+        className={classes.chat}
+        activeClassName={classes["active"]}
+        to={`/chat/${chat._id}`}
+      >
+        <img
+          src={`${config.apiDomain}/profileimages/${chat.user.profileImage}`}
+          alt=""
+        />
+        <span className={classes.username}>{chat.user.fullName}</span>
+
+        <i style={{display: unReads[chat._id] ? "block": "none"}} className="fas fa-comment">
+          <span>{unReads[chat._id]}</span>
+        </i>
+      </NavLink>
     );
   }
 }

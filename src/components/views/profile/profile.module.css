@@ -12,15 +12,16 @@
 .profile-container {
   position: absolute;
   width: 500px;
-  min-height: 450px;
-  background-color: rgba(44, 62, 80, 1);
-  top: 50%;
+  min-height: 50%;
+  background-color: #275380;
+  top: 40%;
   left: 50%;
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
   text-align: center;
   border-radius: 5px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 2px solid #fafafa;
+  box-shadow: 1px 1px 3px #275380;
 }
 
 .close-icon {
@@ -28,12 +29,12 @@
   top: 10px;
   right: 10px;
   font-size: 25px;
-  color: #8e44ad;
+  color: #fff;
   transition: 0.3s;
   cursor: pointer;
 }
 .close-icon:hover {
-  color: #fff;
+  color: #8E44AD;
 }
 
 .user-image-container {
@@ -45,14 +46,17 @@
   margin-top: 30px;
   width: 140px;
   height: 140px;
-  background-color: #fff;
-  border: 5px solid #8e44ad;
+  background-color: #275380;
+  border: 5px solid #fff;
   border-radius: 50%;
   margin-bottom: 30px;
 }
 
 .hr {
-  margin: 0 10px;
+  border-color: #fff;
+  background-color: #fff;
+  height: 2px;
+  margin: 0 4px;
 }
 
 .info-container {
@@ -87,10 +91,11 @@
 .description {
   display: inline-block;
   width: 80%;
-  padding: 5px 20px;
-  text-align: justify;
+  padding: 20px 20px;
+  text-align: center;
   font-size: 14px;
   font-family: "Lato";
+  word-wrap: break-word;
 }
 
 @media (max-width: 600px) {

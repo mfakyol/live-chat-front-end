@@ -9,6 +9,7 @@ import Home from "../components/views/public/home/Home";
 import Signup from "../components/views/public/signup/Signup";
 import About from "../components/views/public/about/About";
 import ContactUs from "../components/views/public/contact/ContactUs";
+import ChatHome from "../components/views/chatHome/ChatHome";
 
 export default () => {
   return (
@@ -25,6 +26,7 @@ export default () => {
             <Header />
             <Sidebar />
             <Switch>
+              <Route path="/chat/" exact render={ChatHome} />
               <Route path="/chat/:chatId" exact component={MessageBoard} />
             </Switch>
           </Main>
