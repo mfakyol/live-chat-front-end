@@ -29,7 +29,6 @@
 }
 
 .notification-container {
-
   position: absolute;
   top: 18px;
   right: 80px;
@@ -42,6 +41,22 @@
   cursor: pointer;
 }
 
+.notification-container > i + span {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 13px;
+  right: -10px;
+  width: 18px;
+  height: 18px;
+  font-size: 13px;
+  font-weight: 600;
+  background-color: #e74c3c;
+  color: #fff;
+  border-radius: 50%;
+}
+
 .notification-list {
   display: block;
   position: absolute;
@@ -50,9 +65,10 @@
   z-index: 20;
   max-width: 300px;
   width: 100vw;
-  height: 200px;
+  height: 300px;
   background-color: #fff;
   box-shadow: 0px 1px 2px black;
+  overflow-y: auto;
 }
 
 .notification {
@@ -63,9 +79,14 @@
   user-select: none;
 }
 
-.notification-list > h3{
-margin: 10px;
-user-select: none;
+.notification-list > h3 {
+  margin: 10px;
+  user-select: none;
+}
+
+.notification-list > hr {
+  height: 4px;
+  background-color: #275380;
 }
 
 .notification > img {
@@ -73,19 +94,24 @@ user-select: none;
   height: 50px;
   border-radius: 50%;
 }
+
 .notification > span {
   width: 150px;
   margin-left: 5px;
 }
 
+.notification > p {
+  margin-left: 5px;
+}
+
 .notification > .accept {
-font-size: 20px;
-padding: 5px;
-margin-left: 8px;
-color: #275380;
-background-color: rgba(200, 200, 200, 0.6);
-border-radius: 50%;
-transition: .3s;
+  font-size: 20px;
+  padding: 5px;
+  margin-left: 8px;
+  color: #275380;
+  background-color: rgba(200, 200, 200, 0.6);
+  border-radius: 50%;
+  transition: 0.3s;
 }
 
 .notification > .reject {
@@ -95,7 +121,7 @@ transition: .3s;
   color: #e74c3c;
   background-color: rgba(200, 200, 200, 0.6);
   border-radius: 50%;
-  transition: .3s;
+  transition: 0.3s;
 }
 
 .notification > .accept:hover {
@@ -107,7 +133,6 @@ transition: .3s;
   background-color: #e74c3c;
   color: #fff;
 }
-
 
 .account {
   position: relative;
@@ -212,4 +237,25 @@ transition: .3s;
 
 .menu-item:hover {
   background-color: rgba(200, 200, 200, 0.6);
+}
+
+/* width */
+.notification-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* Track */
+.notification-list::-webkit-scrollbar-track {
+  background: #fff;
+}
+
+/* Handle */
+.notification-list::-webkit-scrollbar-thumb {
+  background: #275380;
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+.notification-list::-webkit-scrollbar-thumb:hover {
+  background: #34495e;
 }

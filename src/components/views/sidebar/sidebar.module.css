@@ -61,6 +61,13 @@
   font-size: 14px;
 }
 
+.err {
+  margin-left: 15px;
+  margin-top: 25px;
+  color: #e74c3c;
+  font-size: 18px;
+}
+
 .sidebar-header > hr {
   margin-top: 5px;
   flex-basis: 100%;
@@ -131,7 +138,8 @@
 
 .chat {
   position: relative;
-  display: block;
+  display: flex;
+  align-items: center;
   float: left;
   width: 100%;
   padding: 5px;
@@ -164,13 +172,13 @@
 }
 
 .chat > .username {
+  width: 130px;
   display: inline;
   float: left;
   color: #fff;
   font-weight: 600;
-  margin-top: 8px;
-  margin-left: 10px;
-  font-size: 18px;
+  margin-left: 5px;
+  font-size: 15px;
 }
 
 .chat > i {

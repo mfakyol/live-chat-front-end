@@ -2,13 +2,16 @@ import socket from "../../socket";
 
 //ActionTypes
 const UPDATE_CHAT_LAST_DATE = "UPDATE_CHAT_LAST_DATE";
-const PUSH_CHATS = "PUSH_CHATS";
+const UPDATE_CHATS = "UPDATE_CHATS";
+const PUSH_CHAT = "PUSH_CHAT";
 
 //Reducer
 export default function chatsReducer(state = [], { type, payload }) {
   switch (type) {
-    case PUSH_CHATS:
+    case UPDATE_CHATS:
       return payload.data;
+    case PUSH_CHAT:
+      return [...sortChats([...state, payload.data])]
     case UPDATE_CHAT_LAST_DATE:
       return [
         ...sortChats(
@@ -26,13 +29,23 @@ export default function chatsReducer(state = [], { type, payload }) {
 }
 
 //Actions
-export function pushChats(data) {
+export function updateChats(data) {
   sortChats(data);
   return {
-    type: PUSH_CHATS,
+    type: UPDATE_CHATS,
     payload: {
       data: sortChats(data),
     },
+  };
+}
+export function pushChat(data) {
+  return (dispatch) => {
+    dispatch({
+      type: PUSH_CHAT,
+      payload: {
+        data
+      },
+    });
   };
 }
 
@@ -63,7 +76,7 @@ function sortChats(chats) {
 export function getChats() {
   return (dispatch) => {
     socket.emit("getChats", function (err, chats) {
-      dispatch(pushChats(chats));
+      dispatch(updateChats(chats));
     });
   };
 }

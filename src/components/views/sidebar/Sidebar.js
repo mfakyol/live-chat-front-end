@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import classes from "./sidebar.module.css";
 import ChatListItem from "./ChatListItem";
-import { getChats } from "../../../redux/reducers/chatsReducer";
+import { getChats, pushChat } from "../../../redux/reducers/chatsReducer";
 import { connect } from "react-redux";
 import socket from "../../../socket";
 import config from "../../../config";
@@ -28,6 +28,9 @@ class Sidebar extends Component {
         this.setState({ isMobile: false });
       }
     });
+    socket.on("newChat", chat => {
+      this.props.onpushChat(chat)
+    })
   }
 
   closeSidebar(e) {
@@ -55,6 +58,7 @@ class Sidebar extends Component {
       isAddChatOpen: !this.state.isAddChatOpen,
       searchInput: "",
       user: null,
+      err: ""
     });
     return false;
   }
@@ -189,7 +193,7 @@ class Sidebar extends Component {
               Search
             </button>
             <hr />
-            {err ? <p>{err}</p> : ""}
+            {err ? <p className={classes["err"]}>{err}</p> : ""}
             {user ? (
               <div className={classes["search-result"]}>
                 <img
@@ -224,6 +228,7 @@ const mapStateToProps = (state, props) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onGetChats: () => dispatch(getChats()),
+    onpushChat: (chat) => dispatch(pushChat(chat)),
   };
 };
 
