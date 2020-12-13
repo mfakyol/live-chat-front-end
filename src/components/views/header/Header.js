@@ -7,37 +7,44 @@ import { connect } from "react-redux";
 import config from "../../../config";
 import socket from "../../../socket";
 import { pushChat } from "../../../redux/reducers/chatsReducer";
-import { pushNotification, removeNotification, setNotificationSeen } from "../../../redux/reducers/notificationsReducer";
+import {
+  pushNotification,
+  removeNotification,
+  setNotificationSeen,
+} from "../../../redux/reducers/notificationsReducer";
+import { updateSound } from "../../../redux/reducers/soundReducer";
 
 class Header extends Component {
   state = {
     myProfile: false,
     notificationsIsOpen: false,
+    accountMenuIsOpen: false,
   };
 
-  componentDidMount(){
-    socket.on("newNotification", notification => {
-      this.props.onPushNotification(notification)
-    })
+  componentDidMount() {
+    socket.on("newNotification", (notification) => {
+      this.props.onPushNotification(notification);
+    });
   }
 
-  openAccountMenu(e) {
-    const menu = e.target.nextSibling;
-    if (menu.style.display !== "inline-block") {
-      menu.style.display = "inline-block";
-      const closeAccountMenu = (e) => {
-        try {
-          document.querySelector("#account-menu").style.display = "none";
-          document.removeEventListener("click", closeAccountMenu);
-        } catch (e) {}
-      };
-      document.addEventListener("click", closeAccountMenu);
+  toggleAccountMenu(e) {
+    if (!this.state.accountMenuIsOpen) {
+      this.setState({
+        notificationsIsOpen: false,
+      });
     }
+    this.setState({
+      accountMenuIsOpen: !this.state.accountMenuIsOpen,
+    });
   }
+
   toggleNotification() {
-    if(!this.state.notificationsIsOpen){
-      this.props.onSetNotificationSeen()
-      socket.emit("setNotificationLastSeen",Date.now())
+    if (!this.state.notificationsIsOpen) {
+      this.props.onSetNotificationSeen();
+      socket.emit("setNotificationLastSeen", Date.now());
+      this.setState({
+        accountMenuIsOpen: false,
+      });
     }
     this.setState({
       notificationsIsOpen: !this.state.notificationsIsOpen,
@@ -47,30 +54,46 @@ class Header extends Component {
   answerRequest(requestId, answer, e) {
     console.log(requestId, answer);
     socket.emit("answerRequest", requestId, answer, (err, chat) => {
-      if(!err){
-        if(chat){
-          this.props.onPushChat(chat)
-          this.props.onRemoveNotification(requestId)
-        }
-        else {
-          this.props.onRemoveNotification(requestId)
+      if (!err) {
+        if (chat) {
+          this.props.onPushChat(chat);
+          this.props.onRemoveNotification(requestId);
+        } else {
+          this.props.onRemoveNotification(requestId);
         }
       }
     });
   }
 
+  copyUserId(id, e) {
+    var inp = document.createElement("input");
+    document.body.appendChild(inp);
+    inp.value = id;
+    inp.select();
+    document.execCommand("copy", false);
+    inp.remove();
+  }
+
+  toggleSound(e) {
+    this.props.onUpdateSound(!this.props.sound);
+  }
+
   toggleMyProfile(e) {
-    this.setState({ myProfile: !this.state.myProfile });
+    this.setState({
+      myProfile: !this.state.myProfile,
+      accountMenuIsOpen: false,
+    });
   }
 
   logOut(e) {
+    socket.disconnect();
     localStorage.clear("token");
     this.props.history.push("/");
   }
 
   render() {
-    const { user, notifications } = this.props;
-    const { notificationsIsOpen } = this.state;
+    const { user, notifications, sound } = this.props;
+    const { notificationsIsOpen, accountMenuIsOpen } = this.state;
     return (
       <header className={classes.header}>
         <Link to="/" className={classes.brand}>
@@ -78,15 +101,22 @@ class Header extends Component {
             Live Chat <span></span>
           </h1>
         </Link>
-        Id: {user.shortId}
         <div className={classes["notification-container"]}>
           <i
             onClick={this.toggleNotification.bind(this)}
             className="fas fa-bell"
+          ></i>
+          <span
+            style={{
+              display:
+                notifications.filter((nt) => !nt.isSeen).length > 0
+                  ? "flex"
+                  : "none",
+            }}
           >
-          </i>
-            <span style = {{display: notifications.filter(nt => !nt.isSeen).length > 0 ?"flex": "none"}}>{notifications.filter(nt => !nt.isSeen).length}</span>
-          
+            {notifications.filter((nt) => !nt.isSeen).length}
+          </span>
+
           <div
             style={{ display: notificationsIsOpen ? "block" : "none" }}
             className={classes["notification-list"]}
@@ -135,8 +165,11 @@ class Header extends Component {
                       src={`${config.apiDomain}/profileImages/${notification.reciever.profileImage}`}
                       alt=""
                     />
-                     <p>
-                      <b>{notification.reciever.fullName}</b> {notification.answer ? "accepted friend request." : "rejected friend request."}
+                    <p>
+                      <b>{notification.reciever.fullName}</b>{" "}
+                      {notification.answer
+                        ? "accepted friend request."
+                        : "rejected friend request."}
                     </p>
                   </div>
                 );
@@ -149,12 +182,16 @@ class Header extends Component {
           <>
             <div className={classes.account}>
               <img
-                onClick={this.openAccountMenu.bind(this)}
+                onClick={this.toggleAccountMenu.bind(this)}
                 className={classes["user-image"]}
                 src={`${config.apiDomain}/profileimages/${user.profileImage}`}
                 alt=""
               />
-              <div id="account-menu" className={classes["account-menu"]}>
+              <div
+                style={{ display: accountMenuIsOpen ? "block" : "none" }}
+                id="account-menu"
+                className={classes["account-menu"]}
+              >
                 <span className={classes["account-info"]}>
                   <img
                     className={classes["user-image"]}
@@ -163,7 +200,21 @@ class Header extends Component {
                   />
                   <p className={classes.username}>{user.fullName}</p>
                   <p className={classes.email}>{user.email}</p>
+                  <p className={classes["user-id"]}>
+                    User Id:{" "}
+                    <span
+                      onClick={this.copyUserId.bind(this, user.shortId)}
+                      title="Click to copy"
+                    >{`${user.shortId}`}</span>
+                  </p>
                   <hr />
+                  <div className={classes["sound-container"]}>
+                    <span> Message Sound: </span>
+                    <label className={classes["switch"]}>
+                      <input onClick={this.toggleSound.bind(this)} readOnly checked={sound} type="checkbox" />
+                      <span className={classes["slider"]}></span>
+                    </label>
+                  </div>
                   <div className={classes["menu-items"]}>
                     <span
                       onClick={this.toggleMyProfile.bind(this)}
@@ -194,17 +245,22 @@ class Header extends Component {
 }
 
 const mapStateToProps = (state, props) => {
-  return { user: state.user, notifications: state.notifications };
+  return {
+    user: state.user,
+    notifications: state.notifications,
+    sound: state.sound,
+  };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     onPushChat: (chat) => dispatch(pushChat(chat)),
-    onPushNotification: (notification) => dispatch(pushNotification(notification)),
-    onRemoveNotification: (notificationId) => dispatch(removeNotification(notificationId)),
+    onPushNotification: (notification) =>
+      dispatch(pushNotification(notification)),
+    onRemoveNotification: (notificationId) =>
+      dispatch(removeNotification(notificationId)),
     onSetNotificationSeen: () => dispatch(setNotificationSeen()),
-   
-    
+    onUpdateSound: (data) => dispatch(updateSound(data)),
   };
 };
 

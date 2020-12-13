@@ -6,6 +6,7 @@ import unReads from "./unreadsReducer";
 import messages from "./messagesReducer";
 import images from "./imagesReducer";
 import notifications from "./notificationsReducer";
+import sound from "./soundReducer";
 
 export default combineReducers({
   example,
@@ -14,5 +15,6 @@ export default combineReducers({
   unReads,
   messages,
   images,
-  notifications
+  notifications,
+  sound
 });

@@ -1,14 +1,19 @@
+import jwt from "jsonwebtoken";
+import socket from "../../socket";
+import { connect } from "react-redux";
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import jwt from "jsonwebtoken";
-
-import { connect } from "react-redux";
 import { getUser } from "../../redux/reducers/userReducer";
 import { pushUnread } from "../../redux/reducers/unreadsReducer";
-import { getChats, updateChatLastDate } from "../../redux/reducers/chatsReducer";
+import {
+  getChats,
+  updateChatLastDate,
+} from "../../redux/reducers/chatsReducer";
 import { pushMessage } from "../../redux/reducers/messagesReducer";
-import socket from "../../socket";
 import { getNotifications } from "../../redux/reducers/notificationsReducer";
+import sound from "../../helpers/sound/message-sound.ogg";
+import { getSoundIsOpen } from "../../redux/reducers/soundReducer";
+var audio = new Audio(sound);
 
 class Main extends Component {
   componentDidMount() {
@@ -26,11 +31,17 @@ class Main extends Component {
     });
 
     socket.on("connected", () => {
+      this.props.onGetSoundIsOpen();
       this.props.ongetUser();
       this.props.onGetChats();
       this.props.onGetNotifications();
       socket.on("newMessage", (newMessage) => {
-        const {onUpdateChatLastDate, onPushMessage, onPushUnred} = this.props;
+        if (this.props.soundIsOpen) {
+          audio.pause();
+          audio.currentTime = 0;
+          audio.play();
+        }
+        const { onUpdateChatLastDate, onPushMessage, onPushUnred } = this.props;
         if (newMessage.chatId === this.props.match.params.path) {
           onPushMessage(newMessage);
           socket.emit(
@@ -42,7 +53,7 @@ class Main extends Component {
         } else {
           onPushUnred(newMessage.chatId);
         }
-        onUpdateChatLastDate(newMessage.chatId, newMessage.sentDate)
+        onUpdateChatLastDate(newMessage.chatId, newMessage.sentDate);
       });
     });
   }
@@ -53,18 +64,19 @@ class Main extends Component {
 }
 
 const mapStateToProps = (state) => {
-  return {};
+  return { soundIsOpen: state.sound };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     ongetUser: () => dispatch(getUser()),
     onGetChats: () => dispatch(getChats()),
+    onGetSoundIsOpen: () => dispatch(getSoundIsOpen()),
     onPushUnred: (chatId) => dispatch(pushUnread(chatId)),
     onGetNotifications: () => dispatch(getNotifications()),
     onPushMessage: (message) => dispatch(pushMessage(message)),
-    onUpdateChatLastDate: (chatId, date) => dispatch(updateChatLastDate(chatId, date)),
-    
+    onUpdateChatLastDate: (chatId, date) =>
+      dispatch(updateChatLastDate(chatId, date)),
   };
 };
 

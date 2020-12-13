@@ -170,7 +170,9 @@
 }
 
 .account-info > .user-image {
-  margin: 5px;
+  width: 70px;
+  height: 70px;
+  margin: 7px 5px;
   cursor: default !important;
 }
 
@@ -179,8 +181,8 @@
   display: inline-block;
   position: absolute;
   top: 10px;
-  left: 65px;
-  width: 230px;
+  left: 85px;
+  width: 210px;
   height: 20px;
   font-size: 16px;
   font-weight: 900;
@@ -194,31 +196,47 @@
   display: inline-block;
   position: absolute;
   top: 33px;
-  left: 65px;
-  width: 230px;
+  left: 85px;
+  width: 210px;
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: 600;
   color: #525757;
 }
 
-.account-info > .phone {
+.account-info > .user-id {
   display: inline-block;
   position: absolute;
-  top: 25px;
-  left: 45px;
-  width: 230px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  top: 55px;
+  left: 85px;
+  width: 210px;
   font-weight: 600;
+  font-size: 15px;
   color: #525757;
-  display: none;
+}
+
+.account-info > .user-id > span {
+  cursor: pointer;
 }
 
 .account-info > hr {
   margin: 1px;
   border-color: #525757;
   background-color: #525757;
+}
+
+.sound-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-left: 20px;
+  margin-right: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.sound-container span {
+  font-size: 18px;
+  font-weight: 600;
 }
 
 .menu-items {
@@ -258,4 +276,59 @@
 /* Handle on hover */
 .notification-list::-webkit-scrollbar-thumb:hover {
   background: #34495e;
+}
+
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+  border-radius: 30px;
+}
+
+.slider:before {
+  position: absolute;
+  top: 3px;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(18px);
+  -ms-transform: translateX(18px);
+  transform: translateX(18px);
 }
