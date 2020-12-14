@@ -171,6 +171,8 @@ class Header extends Component {
                         ? "accepted friend request."
                         : "rejected friend request."}
                     </p>
+                    <b>{new Date(notification.sentDate).toLocaleDateString()}</b>
+                    <i>{new Date(notification.sentDate).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</i>
                   </div>
                 );
               }
@@ -201,7 +203,7 @@ class Header extends Component {
                   <p className={classes.username}>{user.fullName}</p>
                   <p className={classes.email}>{user.email}</p>
                   <p className={classes["user-id"]}>
-                    User Id:{" "}
+                    User Id:
                     <span
                       onClick={this.copyUserId.bind(this, user.shortId)}
                       title="Click to copy"
@@ -211,7 +213,12 @@ class Header extends Component {
                   <div className={classes["sound-container"]}>
                     <span> Message Sound: </span>
                     <label className={classes["switch"]}>
-                      <input onClick={this.toggleSound.bind(this)} readOnly checked={sound} type="checkbox" />
+                      <input
+                        onClick={this.toggleSound.bind(this)}
+                        readOnly
+                        checked={sound}
+                        type="checkbox"
+                      />
                       <span className={classes["slider"]}></span>
                     </label>
                   </div>

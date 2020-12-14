@@ -72,9 +72,11 @@
 }
 
 .notification {
+  position: relative;
   display: flex;
   align-items: center;
-  padding: 5px;
+  padding: 10px 5px;
+  margin-left: 2px;
   border-bottom: 2px solid #275380;
   user-select: none;
 }
@@ -132,6 +134,24 @@
 .notification > .reject:hover {
   background-color: #e74c3c;
   color: #fff;
+}
+
+.notification > b {
+  position: absolute;
+  top: 0;
+  right: 2px;
+  font-size: 14px;
+  color: #525757;
+}
+
+.notification > i {
+  position: absolute;
+  bottom: 0;
+  right: 2px;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  color: #525757;
 }
 
 .account {
