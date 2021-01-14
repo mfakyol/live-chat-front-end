@@ -5,6 +5,7 @@ import { getChats, pushChat } from "../../../redux/reducers/chatsReducer";
 import { connect } from "react-redux";
 import socket from "../../../socket";
 import config from "../../../config";
+import LoadingSpinner from '../../common/LoadingSpinner'
 
 class Sidebar extends Component {
   state = {
@@ -116,7 +117,7 @@ class Sidebar extends Component {
       user,
       err,
     } = this.state;
-    const { chats } = this.props;
+    const { chats, isChatsLoading } = this.props;
     return (
       <>
         <div
@@ -136,6 +137,7 @@ class Sidebar extends Component {
           style={{ transform: isMobile && isOpen ? "translate(0)" : "" }}
           className={classes.sidebar}
         >
+          <LoadingSpinner status={isChatsLoading}/>
           <div className={classes["sidebar-header"]}>
             <b>CHATS</b>
             <span onClick={this.toggleAddChat.bind(this)}>
@@ -222,7 +224,7 @@ class Sidebar extends Component {
 }
 
 const mapStateToProps = (state, props) => {
-  return { chats: state.chats };
+  return { chats: state.chats, isChatsLoading: state.isChatsLoading };
 };
 
 const mapDispatchToProps = (dispatch) => {

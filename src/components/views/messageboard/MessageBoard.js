@@ -5,6 +5,7 @@ import InputField from "./inputfield/InputField";
 import Profile from "../profile/Profile";
 import {
   getLastMessages,
+  getOldMessages,
   clearMessages,
   setMessageSeen,
 } from "../../../redux/reducers/messagesReducer";
@@ -16,18 +17,42 @@ import ImageContainer from "./inputfield/Images/ImageContainer";
 import ImageMessage from "./imagemessage/ImageMessage";
 import { clearImages } from "../../../redux/reducers/imagesReducer";
 import socket from "../../../socket";
+import LoadingSpinner from "../../common/LoadingSpinner";
 
 class MessageBoard extends Component {
+  constructor(props) {
+    super(props);
+    this.messageboard = React.createRef();
+  }
+
   state = {
     isOnline: false,
     profileIsOpen: false,
-  };  
-  componentDidMount() {
-    socket.on("setSeen", (chatId, date) => {
-      if (this.props.match.params.chatId === chatId) {
-        this.props.onSetMessageSeen(date);
+    isFetching: true,
+    canFetchMore: true,
+  };
+  async componentDidMount() {
+    this.messageboard.current.addEventListener("scroll", async (e) => {
+      if (
+        e.target.scrollTop <= 50 &&
+        !this.state.isFetching &&
+        this.state.canFetchMore && this.props.messages.length > 0
+      ) {
+        await this.setState({
+          isFetching: true,
+          oldScrollheight: e.target.scrollHeight,
+        });
+        await this.props.onGetOldMessages(
+          chatId,
+          this.props.messages[0].sentDate
+        );
       }
     });
+    socket.on("setSeen", (chatId, date) => {
+      if (this.props.match.params.chatId === chatId)
+        this.props.onSetMessageSeen(date);
+    });
+
     const { chatId } = this.props.match.params;
     const sendLastSeenDate = (date) => {
       socket.emit("setLastSeen", chatId, date, function (err, status) {
@@ -38,24 +63,38 @@ class MessageBoard extends Component {
         }
       });
     };
-    this.props.onGetLastMessages(chatId);
+    await this.props.onGetLastMessages(chatId);
     this.props.onResetUnread(chatId);
     sendLastSeenDate(Date.now());
     socket.on("isOnline", (status) => {
       this.setState({ isOnline: status });
     });
     socket.emit("connectUserStatus", chatId, (err, status) => {
-      console.log("s: " + status);
       this.setState({ isOnline: status });
     });
   }
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextState.isFetching !== this.state.isFetching) return false;
+    if (nextState.canFetchMore !== this.state.canFetchMore) return false;
+    return true;
+  }
 
-  componentDidUpdate(prevProps) {
-    this.scrollToBottom();
+  async componentDidUpdate(prevProps) {
+    if (!this.state.isFetching) {
+      this.scrollToBottom();
+    } else {
+      this.messageboard.current.scrollTop =
+        this.messageboard.current.scrollHeight - this.state.oldScrollheight;
+      if (prevProps.messages.length + 20 > this.props.messages.length && prevProps.messages.length !== 0 ) {
+        this.setState({ canFetchMore: false });
+      }
+      this.setState({ isFetching: false });
+    }
     if (prevProps.match.params.chatId !== this.props.match.params.chatId) {
-      this.props.onClearMessages();
-      this.props.onClearImages();
+      await this.props.onClearMessages();
+      await this.props.onClearImages();
       this.setState({ profileIsOpen: false });
+      this.setState({ isFetching: false, canFetchMore: true });
       socket.emit("disConnectUserStatus", prevProps.match.params.chatId);
       socket.emit(
         "connectUserStatus",
@@ -74,13 +113,14 @@ class MessageBoard extends Component {
           }
         });
       };
-      this.props.onGetLastMessages(chatId);
+      await this.props.onGetLastMessages(chatId);
+      this.setState({isFetching: false})
       this.props.onResetUnread(chatId);
       sendLastSeenDate(Date.now());
     }
   }
 
-  async componentWillUnmount() {
+  componentWillUnmount() {
     this.props.onClearMessages();
   }
 
@@ -97,12 +137,13 @@ class MessageBoard extends Component {
   render() {
     let lastDate = undefined;
     const { chatId } = this.props.match.params;
-    const { profileIsOpen, isOnline } = this.state;
-    const { chats, messages } = this.props;
+    const { profileIsOpen, isOnline, } = this.state;
+    const { chats, messages, isMessagesLoading } = this.props;
     const userData = chats.filter((chat) => chat._id === chatId)[0];
     return (
       <main className={classes.main}>
-        <div className={classes["message-board"]}>
+        <div ref={this.messageboard} className={classes["message-board"]}>
+          <LoadingSpinner status={isMessagesLoading}/>
           <div className={classes["message-board-header"]}>
             {userData ? (
               <>
@@ -135,9 +176,9 @@ class MessageBoard extends Component {
             {messages.length > 0 ? (
               <div className={classes["day-info"]}>
                 <span>
-                  {`${new Date(messages[0].sentDate).getDate()}  ${new Date(messages[0].sentDate).toLocaleString("default", { month: "long" })}`
-
-                  }
+                  {`${new Date(messages[0].sentDate).getDate()}  ${new Date(
+                    messages[0].sentDate
+                  ).toLocaleString("default", { month: "long" })}`}
                 </span>
               </div>
             ) : null}
@@ -189,14 +230,17 @@ class MessageBoard extends Component {
           </div>
         </div>
         <ImageContainer chatId={chatId} />
-        <InputField scrollToBottom = {this.scrollToBottom.bind(this)} chatId={chatId} />
+        <InputField
+          scrollToBottom={this.scrollToBottom.bind(this)}
+          chatId={chatId}
+        />
       </main>
     );
   }
 }
 
 const mapStateToProps = (state, props) => {
-  return { chats: state.chats, messages: state.messages };
+  return { chats: state.chats, messages: state.messages, isMessagesLoading: state.isMessagesLoading };
 };
 
 const mapDispatchToProps = (dispatch) => {
@@ -205,8 +249,9 @@ const mapDispatchToProps = (dispatch) => {
     onClearMessages: () => dispatch(clearMessages()),
     onClearImages: () => dispatch(clearImages()),
     onResetUnread: (chatId) => dispatch(resetUnread(chatId)),
-    onGetLastMessages: (chatId, offset) =>
-      dispatch(getLastMessages(chatId, offset)),
+    onGetLastMessages: (chatId) => dispatch(getLastMessages(chatId)),
+    onGetOldMessages: (chatId, date) => dispatch(getOldMessages(chatId, date)),
+
   };
 };
 

@@ -136,7 +136,7 @@
   color: #fff;
 }
 
-.notification > b {
+.notification > b.time {
   position: absolute;
   top: 0;
   right: 2px;
@@ -144,7 +144,7 @@
   color: #525757;
 }
 
-.notification > i {
+.notification > b.date {
   position: absolute;
   bottom: 0;
   right: 2px;

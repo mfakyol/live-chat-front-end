@@ -96,7 +96,7 @@ class Header extends Component {
     const { notificationsIsOpen, accountMenuIsOpen } = this.state;
     return (
       <header className={classes.header}>
-        <Link to="/" className={classes.brand}>
+        <Link to="/chat" className={classes.brand}>
           <h1>
             Live Chat <span></span>
           </h1>
@@ -171,8 +171,8 @@ class Header extends Component {
                         ? "accepted friend request."
                         : "rejected friend request."}
                     </p>
-                    <b>{new Date(notification.sentDate).toLocaleDateString()}</b>
-                    <i>{new Date(notification.sentDate).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</i>
+                    <b className={classes["time"]}>{new Date(notification.sentDate).toLocaleDateString()}</b>
+                    <b  className={classes["date"]}>{new Date(notification.sentDate).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</b>
                   </div>
                 );
               }

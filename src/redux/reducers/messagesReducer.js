@@ -1,10 +1,12 @@
 import socket from "../../socket";
+import {updateIsMessagesLoading} from './isMessagesLoadingReducer'
 
 //ActionTypes
 const SET_MESSAGES = "SET_MESSAGES";
 const CLEAR_MESSAGES = "CLEAR_MESSAGES";
 const PUSH_MESSAGE = "PUSH_MESSAGE";
 const SET_MESSAGE_SEEN = "SET_MESSAGE_SEEN";
+const SET_OLD_MESSAGES = "SET_OLD_MESSAGES";
 
 //Reducer
 export default function messagesReducer(state = [], { payload, type }) {
@@ -19,6 +21,8 @@ export default function messagesReducer(state = [], { payload, type }) {
       });
     case SET_MESSAGES:
       return payload.data;
+    case SET_OLD_MESSAGES:
+      return [...payload.messages, ...state];
     case PUSH_MESSAGE:
       return [...state, payload.data];
     case CLEAR_MESSAGES:
@@ -59,6 +63,7 @@ export function setMessageSeen(data) {
 
 export function clearMessages() {
   return (dispatch) => {
+    dispatch(updateIsMessagesLoading(true))
     dispatch({
       type: CLEAR_MESSAGES,
       payload: {},
@@ -71,6 +76,19 @@ export function getLastMessages(chatId) {
     socket.emit("getLastMessages", chatId, function (err, messages) {
       if (!err) {
         dispatch(setMessages(messages));
+        dispatch(updateIsMessagesLoading(false))
+      }
+    });
+  };
+}
+export function getOldMessages(chatId, date) {
+  return (dispatch) => {
+    socket.emit("getOldMessages", chatId, date, function (err, messages) {
+      if (!err) {
+        dispatch({
+          type: SET_OLD_MESSAGES,
+          payload: { messages },
+        });
       }
     });
   };

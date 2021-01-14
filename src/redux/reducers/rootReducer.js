@@ -7,6 +7,8 @@ import messages from "./messagesReducer";
 import images from "./imagesReducer";
 import notifications from "./notificationsReducer";
 import sound from "./soundReducer";
+import isMessagesLoading from './isMessagesLoadingReducer'
+import isChatsLoading from './isChatsLoadingReducer'
 
 export default combineReducers({
   example,
@@ -16,5 +18,7 @@ export default combineReducers({
   messages,
   images,
   notifications,
-  sound
+  sound,
+  isMessagesLoading,
+  isChatsLoading
 });

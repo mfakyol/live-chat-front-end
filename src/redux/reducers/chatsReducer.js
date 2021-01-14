@@ -1,4 +1,5 @@
 import socket from "../../socket";
+import {updateIsChatLoading} from './isChatsLoadingReducer'
 
 //ActionTypes
 const UPDATE_CHAT_LAST_DATE = "UPDATE_CHAT_LAST_DATE";
@@ -77,6 +78,7 @@ export function getChats() {
   return (dispatch) => {
     socket.emit("getChats", function (err, chats) {
       dispatch(updateChats(chats));
+      dispatch(updateIsChatLoading(false))
     });
   };
 }
